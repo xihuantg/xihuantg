@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>豫志通 - 看清风险，再填志愿</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="豫志通首页">
+        <span class="brand-mark">豫</span>
+        <span>
+          <strong>豫志通</strong>
+          <small>河南3+1+2志愿工具</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="主导航">
+        <a href="#recommend">智能推荐</a>
+        <a href="#volunteer">志愿诊断</a>
+        <a href="#report">报告预览</a>
+        <a href="#schools">院校专业组</a>
+        <a href="#majors">专业适配</a>
+        <a href="#pricing">会员</a>
+        <a href="#why-pay">付费价值</a>
+        <a href="#environment">环境评价</a>
+      </nav>
+      <button class="ghost-btn" id="loginBtn" type="button">登录 / 注册</button>
+    </header>
+
+    <main>
+
+            <section class="mobile-app-home" id="mobileAppHome" data-mobile-tab="home">
+        <div class="mobile-app-top">
+          <div>
+            <span>&#35947;&#24535;&#36890;</span>
+            <strong>&#27827;&#21335; 3+1+2 &#24535;&#24895;&#24037;&#20855;</strong>
+          </div>
+          <button type="button" id="mobileLoginBtn">&#30331;&#24405;</button>
+        </div>
+
+        <div class="mobile-hero-card">
+          <p class="mobile-eyebrow">&#36755;&#20837;&#20998;&#25968;&#20301;&#27425;&#65292;&#20808;&#30475;&#33021;&#25253;&#21738;&#37324;</p>
+          <h1>&#27979;&#19968;&#27979;&#33021;&#19978;&#21738;&#20123;&#22823;&#23398;</h1>
+          <p>&#19981;&#35762;&#29572;&#23398;&#65292;&#19981;&#22534;&#26415;&#35821;&#65292;&#21482;&#25226;&#20381;&#25454;&#12289;&#39118;&#38505;&#21644;&#25490;&#24207;&#35762;&#28165;&#26970;&#12290;</p>
+          <form class="mobile-quick-form" id="mobileQuickForm">
+            <div class="mobile-form-row two">
+              <label>&#39318;&#36873;&#31185;&#30446;<select id="mobilePrimarySubject"><option>&#29289;&#29702;</option><option>&#21382;&#21490;</option></select></label>
+              <label>&#25209;&#27425;<select id="mobileBatch"><option>&#26412;&#31185;&#25209;</option><option>&#25552;&#21069;&#25209;</option><option>&#19987;&#31185;&#25209;</option></select></label>
+            </div>
+            <div class="mobile-form-row two">
+              <label>&#20877;&#36873;&#19968;<select id="mobileSecondSubjectA"><option>&#21270;&#23398;</option><option>&#29983;&#29289;</option><option>&#24605;&#24819;&#25919;&#27835;</option><option>&#22320;&#29702;</option></select></label>
+              <label>&#20877;&#36873;&#20108;<select id="mobileSecondSubjectB"><option>&#29983;&#29289;</option><option>&#21270;&#23398;</option><option>&#24605;&#24819;&#25919;&#27835;</option><option>&#22320;&#29702;</option></select></label>
+            </div>
+            <div class="mobile-form-row two">
+              <label>&#39640;&#32771;&#20998;&#25968;<input id="mobileScore" type="number" value="612" /></label>
+              <label>&#27827;&#21335;&#20301;&#27425;<input id="mobileRank" type="number" value="28500" /></label>
+            </div>
+            <button class="primary-btn full" type="submit">&#31435;&#21363;&#29983;&#25104;&#25512;&#33616;</button>
+          </form>
+        </div>
+
+        <div class="mobile-profile-card" id="mobileProfileCard"></div>
+
+        <div class="mobile-tool-grid">
+          <button type="button" onclick="openMobileTab('recommend')"><strong>&#26234;&#33021;&#25512;&#33616;</strong><span>&#26597;&#30475;&#20914;&#31283;&#20445;</span></button>
+          <button type="button" onclick="openMobileTab('diagnosis')"><strong>&#24535;&#24895;&#35786;&#26029;</strong><span>&#26816;&#26597;&#28369;&#26723;&#39118;&#38505;</span></button>
+          <button type="button" onclick="openMobileTab('schools')"><strong>&#38498;&#26657;&#24211;</strong><span>&#26597;&#19987;&#19994;&#32452;</span></button>
+          <button type="button" onclick="openMajorDirectory()"><strong>&#19987;&#19994;&#30446;&#24405;</strong><span>93 &#20010;&#19987;&#19994;&#31867;</span></button>
+          <button type="button" onclick="openMobileTab('account')"><strong>&#25253;&#21578;&#39044;&#35272;</strong><span>&#23478;&#24237;&#29256;&#35299;&#37322;</span></button>
+          <button type="button" onclick="openMobileTab('account')"><strong>&#20250;&#21592;&#26435;&#30410;</strong><span>&#23436;&#25972;&#26041;&#26696;</span></button>
+        </div>
+
+        <div class="mobile-viewpoint-card">
+          <span>&#25105;&#20204;&#30340;&#20570;&#27861;</span>
+          <h2>&#26222;&#36890;&#23478;&#24237;&#20063;&#33021;&#30475;&#25026;&#30340;&#24535;&#24895;&#26041;&#26696;</h2>
+          <p>&#25105;&#20204;&#19981;&#21334;&#32447;&#19979;&#19987;&#23478;&#26381;&#21153;&#65292;&#20063;&#19981;&#25215;&#35834;&#30334;&#20998;&#30334;&#24405;&#21462;&#12290;&#25105;&#20204;&#20570;&#30340;&#26159;&#25226;&#36873;&#31185;&#12289;&#20301;&#27425;&#12289;&#19987;&#19994;&#32452;&#12289;&#22478;&#24066;&#21644;&#20445;&#24213;&#39118;&#38505;&#25972;&#29702;&#25104;&#19968;&#20221;&#21487;&#27604;&#36739;&#12289;&#21487;&#35752;&#35770;&#30340;&#26041;&#26696;&#12290;</p>
+        </div>
+      </section>
+
+      <section class="mobile-home" id="mobileHome">
+        <div class="mobile-home-hero">
+          <div class="section-kicker">河南新高考 · 移动版</div>
+          <h1>看清风险，再填志愿</h1>
+          <p>先生成基础方案，再进入不同板块查看推荐、诊断、报告和专业目录。</p>
+          <button class="primary-btn" type="button" data-mobile-open="home" data-title="生成志愿方案">生成志愿方案</button>
+        </div>
+        <div class="mobile-entry-grid" aria-label="功能入口">
+          <button type="button" data-mobile-open="recommend" data-title="智能推荐"><strong>智能推荐</strong><span>查看冲稳保结果</span></button>
+          <button type="button" data-mobile-open="volunteer" data-title="志愿诊断"><strong>志愿诊断</strong><span>检查滑档和保底</span></button>
+          <button type="button" data-mobile-open="report" data-title="报告预览"><strong>报告预览</strong><span>看家庭版报告</span></button>
+          <button type="button" data-mobile-open="schools" data-title="院校专业组"><strong>院校专业组</strong><span>查选科可报</span></button>
+          <button type="button" data-mobile-directory><strong>专业目录</strong><span>查 93 个专业类</span></button>
+          <button type="button" data-mobile-open="why-pay" data-title="付费价值"><strong>付费价值</strong><span>看解锁后多什么</span></button>
+          <button type="button" data-mobile-open="pricing" data-title="会员权益"><strong>会员权益</strong><span>查看套餐</span></button>
+          <button type="button" data-mobile-open="environment" data-title="环境评价"><strong>环境评价</strong><span>看公开摘要</span></button>
+        </div>
+      </section>
+
+      <div class="mobile-page-header" id="mobilePageHeader">
+        <button class="ghost-btn" id="mobileBackBtn" type="button">← 返回首页</button>
+        <strong id="mobilePageTitle">功能页面</strong>
+      </div>
+
+      <section class="hero" id="home" data-mobile-tab="home">
+        <div class="hero-main">
+          <div class="hero-copy">
+            <div class="section-kicker">河南新高考 · 3+1+2模式</div>
+            <h1>看清风险，再填志愿</h1>
+            <p class="intro">
+              面向河南新高考家庭，把选科、位次、专业组和城市偏好整理成一份可比较、可讨论、能复盘的志愿参考方案。
+            </p>
+            <p class="promise-line">不讲玄学，不堆术语，只把依据、风险和排序说清楚。</p>
+          </div>
+
+          <form class="planner-form" id="plannerForm">
+            <div class="form-section">
+              <div class="form-section-head">
+                <span>01</span>
+                <strong>选科信息</strong>
+              </div>
+              <div class="field-grid three">
+                <label>
+                  省份
+                  <input id="province" value="河南" readonly />
+                </label>
+                <label>
+                  首选科目
+                  <select id="primarySubject">
+                    <option>物理</option>
+                    <option>历史</option>
+                  </select>
+                </label>
+                <label>
+                  再选科目一
+                  <select id="secondSubjectA">
+                    <option>化学</option>
+                    <option>生物</option>
+                    <option>思想政治</option>
+                    <option>地理</option>
+                  </select>
+                </label>
+                <label>
+                  再选科目二
+                  <select id="secondSubjectB">
+                    <option>生物</option>
+                    <option>化学</option>
+                    <option>思想政治</option>
+                    <option>地理</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-head">
+                <span>02</span>
+                <strong>成绩定位</strong>
+              </div>
+              <div class="field-grid three">
+                <label>
+                  高考分数
+                  <input id="score" type="number" min="100" max="750" value="612" />
+                </label>
+                <label>
+                  河南同方向位次
+                  <input id="rank" type="number" min="1" value="28500" />
+                </label>
+                <label>
+                  批次
+                  <select id="batch">
+                    <option>本科批</option>
+                    <option>提前批</option>
+                    <option>专科批</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-head">
+                <span>03</span>
+                <strong>偏好筛选</strong>
+              </div>
+              <div class="field-grid two">
+                <label>
+                  专业偏好
+                  <select id="majorPreference">
+                    <option>计算机、软件与人工智能</option>
+                    <option>电子信息、通信与集成电路</option>
+                    <option>电气、自动化与新能源</option>
+                    <option>临床医学、口腔与药学</option>
+                    <option>师范、教育与心理学</option>
+                    <option>法学、政治与公共管理</option>
+                    <option>财经、会计与金融</option>
+                    <option>机械、车辆与智能制造</option>
+                    <option>建筑、土木与交通</option>
+                    <option>农学、食品与环境</option>
+                    <option>汉语言、新闻与外语</option>
+                    <option>不限专业</option>
+                  </select>
+                </label>
+                <label>
+                  城市偏好
+                  <select id="cityPreference">
+                    <option>不限城市</option>
+                    <option>郑州/洛阳/开封</option>
+                    <option>北京/上海/广州/深圳</option>
+                    <option>省会城市</option>
+                    <option>离家较近</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <span>先看基础方案，再决定是否解锁完整报告</span>
+              <button class="primary-btn" type="submit">免费生成我的志愿方案</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="report-preview-panel">
+          <div class="report-preview-top">
+            <span class="badge" id="memberBadge">免费预览</span>
+            <h2>当前考生档案</h2>
+            <p id="profileSummary">河南 · 物理 + 化学 + 生物 · 612分 · 28500位</p>
+            <div class="meter" aria-label="报告完整度"><span id="meterBar"></span></div>
+            <p class="muted">免费版先帮你看出问题。解锁后查看完整名单、排序理由、专业组风险、不可报提醒和家庭版报告。</p>
+            <button class="secondary-btn full" id="upgradeBtn" type="button">查看完整方案</button>
+            <div class="preview-metrics" id="previewMetrics" aria-label="方案概览">
+              <div>
+                <strong>--</strong>
+                <span>可报专业组</span>
+              </div>
+              <div>
+                <strong>--</strong>
+                <span>稳妥候选</span>
+              </div>
+              <div>
+                <strong>--</strong>
+                <span>保底候选</span>
+              </div>
+              <div>
+                <strong>基础</strong>
+                <span>报告状态</span>
+              </div>
+            </div>
+          </div>
+          <div class="report-divider"></div>
+          <div class="report-preview-bottom">
+            <h3>方案会重点看四件事</h3>
+            <p>
+              按河南3+1+2模式先检查选科是否可报，再参考同方向位次区间判断冲、稳、保，重点帮你少踩坑、少漏项、少凭感觉填。
+            </p>
+            <div class="summary-tags" aria-label="方案能力">
+              <span>选科适配</span>
+              <span>位次优先</span>
+              <span>专业组检查</span>
+              <span>报告化解释</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="notice">
+        <strong>模式说明</strong>
+        <span>河南从2022年秋季入学高一学生开始实行高考综合改革，2025年起首届新高考按“3+1+2”模式录取。本演示数据用于产品样板，正式收费前需替换为真实可核验数据。</span>
+      </section>
+
+      <section class="mobile-account-home" id="mobileAccountHome" data-mobile-tab="account">
+        <div class="mobile-account-card">
+          <div class="mobile-account-head">
+            <div class="mobile-avatar">&#35947;</div>
+            <div>
+              <span>&#25105;&#30340;&#25253;&#21578;&#20013;&#24515;</span>
+              <strong>&#20808;&#30475;&#23436;&#25972;&#20381;&#25454;&#65292;&#20877;&#20915;&#23450;&#26159;&#21542;&#20184;&#36153;</strong>
+              <p>&#36866;&#21512;&#19981;&#24819;&#33457;&#20960;&#21315;&#20803;&#21672;&#35810;&#65292;&#20294;&#21448;&#19981;&#24819;&#21482;&#38752;&#38646;&#25955;&#20449;&#24687;&#22635;&#24535;&#24895;&#30340;&#23478;&#24237;&#12290;</p>
+            </div>
+          </div>
+          <button class="primary-btn full" type="button" onclick="openMobileTab('recommend')">&#26597;&#30475;&#25105;&#30340;&#25512;&#33616;&#26041;&#26696;</button>
+        </div>
+
+        <div class="mobile-service-grid">
+          <article>
+            <span>&#23436;&#25972;&#26041;&#26696;&#29256;</span>
+            <strong>&#165;129</strong>
+            <p>&#20840;&#37096;&#20914;&#31283;&#20445;&#28165;&#21333;&#12289;&#36873;&#31185;&#21487;&#25253;&#26816;&#26597;&#12289;&#25490;&#24207;&#24314;&#35758;&#12290;</p>
+          </article>
+          <article>
+            <span>&#23478;&#24237;&#25253;&#21578;&#29256;</span>
+            <strong>&#165;329</strong>
+            <p>&#23478;&#38271;&#29256;&#35299;&#37322;&#12289;&#38498;&#26657;&#19987;&#19994;&#23545;&#27604;&#12289;&#23548;&#20986;&#25171;&#21360;&#12289;&#22810;&#27425;&#27169;&#25311;&#12290;</p>
+          </article>
+        </div>
+
+        <div class="mobile-account-tools">
+          <button type="button" onclick="openMobileTab('diagnosis')"><strong>&#24535;&#24895;&#34920;</strong><span>&#26597;&#30475;&#39118;&#38505;&#35786;&#26029;</span></button>
+          <button type="button" onclick="openMobileTab('schools')"><strong>&#38498;&#26657;&#23545;&#27604;</strong><span>&#26597;&#19987;&#19994;&#32452;&#35814;&#24773;</span></button>
+          <button type="button" onclick="openMajorDirectory()"><strong>&#19987;&#19994;&#30446;&#24405;</strong><span>&#30475;&#36873;&#31185;&#36866;&#37197;</span></button>
+          <button type="button" id="mobileUnlockBtn"><strong>&#27169;&#25311;&#35299;&#38145;</strong><span>&#26597;&#30475;&#20250;&#21592;&#25928;&#26524;</span></button>
+        </div>
+
+        <div class="mobile-principle-list">
+          <h2>&#25105;&#20204;&#30340;&#22635;&#25253;&#21407;&#21017;</h2>
+          <article><strong>&#19981;&#21334;&#32447;&#19979;&#19987;&#23478;</strong><span>&#20808;&#20570;&#32447;&#19978;&#24037;&#20855;&#21644;&#25253;&#21578;&#65292;&#38477;&#20302;&#26222;&#36890;&#23478;&#24237;&#35797;&#38169;&#25104;&#26412;&#12290;</span></article>
+          <article><strong>&#19981;&#25215;&#35834;&#20445;&#24405;&#21462;</strong><span>&#21482;&#25226;&#36873;&#31185;&#12289;&#20301;&#27425;&#12289;&#26799;&#24230;&#12289;&#19987;&#19994;&#32452;&#39118;&#38505;&#35762;&#28165;&#26970;&#12290;</span></article>
+          <article><strong>&#23665;&#27827;&#22235;&#30465;&#20248;&#20808;</strong><span>&#27827;&#21335;&#26679;&#26495;&#24050;&#24320;&#25918;&#65292;&#23665;&#19996;&#12289;&#27827;&#21271;&#12289;&#23665;&#35199;&#36880;&#27493;&#25193;&#23637;&#12290;</span></article>
+        </div>
+      </section>
+
+      <section class="section-card shanhe" id="why-pay" data-mobile-page="why-pay" data-mobile-tab="account">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">山河四省家庭场景</div>
+            <h2>不想花几千元咨询，也不想只靠零散信息填志愿</h2>
+            <p class="muted">河南优先，山东、河北、山西逐步开放。我们先做线上工具和报告，不卖线下咨询服务。</p>
+          </div>
+        </div>
+        <div class="province-tabs" aria-label="山河四省支持状态">
+          <span class="active">河南样板已开放</span>
+          <span>山东即将支持</span>
+          <span>河北即将支持</span>
+          <span>山西即将支持</span>
+        </div>
+        <div class="pay-reasons">
+          <article>
+            <span class="mini-label">怕浪费分</span>
+            <h3>同位次到底能冲到哪里</h3>
+            <p>把可冲、可稳、可保空间拆开看，避免只凭学校名气排序。</p>
+          </article>
+          <article>
+            <span class="mini-label">怕滑档</span>
+            <h3>保底是否真的够用</h3>
+            <p>检查冲刺过多、保底不足、选科不匹配等明显风险。</p>
+          </article>
+          <article>
+            <span class="mini-label">怕专业坑</span>
+            <h3>不只看专业名字好听</h3>
+            <p>提示医学、法学、师范、冷门工科等方向的长期成本和限制。</p>
+          </article>
+          <article>
+            <span class="mini-label">怕家里吵不清</span>
+            <h3>一份报告一起讨论</h3>
+            <p>把选择依据写清楚，家长和考生围绕同一份方案沟通。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card values">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">我们的做法</div>
+            <h2>把志愿填报讲明白，也把边界说清楚</h2>
+            <p class="muted">不堆术语，不制造焦虑，帮你看懂每一个选择。</p>
+          </div>
+        </div>
+        <div class="values-lead">
+          我们不承诺“百分百录取”，也不制造焦虑。我们做的是：帮你把复杂的志愿信息整理成一份看得懂、能比较、可讨论的参考方案。
+        </div>
+        <div class="values-grid compact-values">
+          <article>
+            <h3>按位次匹配，而不是只看分数</h3>
+            <p>同样的分数，在不同省份、年份和批次里意义不同。系统会优先参考位次区间，帮助你判断院校的大致风险。</p>
+          </article>
+          <article>
+            <h3>冲稳保结构更清楚</h3>
+            <p>每所推荐院校都会标注冲、稳、保类型，并说明为什么这样分类，避免只看到学校名字却不知道怎么排序。</p>
+          </article>
+          <article>
+            <h3>适合家长和考生一起看</h3>
+            <p>页面尽量少用术语，多用清楚的解释，让家长、考生能围绕同一份方案讨论，而不是各查各的。</p>
+          </article>
+          <article>
+            <span class="mini-label">免费版提示</span>
+            <p>免费版可查看部分推荐结果和基础分析。解锁完整方案后，可查看全部冲稳保院校、专业适配建议、志愿排序参考和报告预览。</p>
+          </article>
+          <article>
+            <span class="mini-label">结果页说明</span>
+            <p>以下结果基于模拟数据和历史位次逻辑生成，仅作为志愿填报参考。实际录取结果会受到招生计划、报考人数、专业热度、政策变化等因素影响。</p>
+          </article>
+          <article>
+            <span class="mini-label">报告区说明</span>
+            <p>这份报告不是替你做决定，而是帮你看清每个选择的依据。你可以重点关注三件事：学校层次是否合适、专业方向是否匹配、志愿梯度是否稳妥。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card" id="recommend" data-mobile-page="recommend" data-mobile-tab="recommend">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">智能推荐</div>
+            <h2>先筛选科，再看冲稳保</h2>
+            <p class="muted">以下结果基于模拟数据和历史位次逻辑生成，仅作为志愿填报参考。实际录取结果会受到招生计划、报考人数、专业热度、政策变化等因素影响。</p>
+          </div>
+          <div class="segmented" role="tablist" aria-label="推荐类别">
+            <button class="active" data-filter="all" type="button">全部</button>
+            <button data-filter="冲" type="button">冲</button>
+            <button data-filter="稳" type="button">稳</button>
+            <button data-filter="保" type="button">保</button>
+            <button data-filter="不可报" type="button">不可报</button>
+          </div>
+        </div>
+        <div class="insight-strip" id="matchInsight"></div>
+        <div class="recommend-grid" id="recommendGrid"></div>
+      </section>
+
+      <section class="section-card split" id="volunteer" data-mobile-page="volunteer" data-mobile-tab="diagnosis">
+        <div>
+          <div class="section-head compact">
+            <div>
+              <div class="section-kicker">志愿表诊断</div>
+              <h2>可排序志愿方案</h2>
+            </div>
+            <div class="button-row">
+              <button class="secondary-btn" id="exportBtn" type="button">导出CSV</button>
+              <button class="ghost-btn" id="clearBtn" type="button">清空</button>
+            </div>
+          </div>
+          <div class="volunteer-list" id="volunteerList"></div>
+        </div>
+        <aside class="risk-panel">
+          <h3>自动风险检查</h3>
+          <ul id="riskList"></ul>
+          <button class="primary-btn full" id="reportBtn" type="button">打印/导出报告</button>
+        </aside>
+      </section>
+
+      <section class="section-card" data-mobile-tab="diagnosis">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">志愿避坑体检</div>
+            <h2>本报告重点检查 6 件事</h2>
+            <p class="muted">不是替你做决定，而是帮你把风险看清楚。少一次盲填，多一份依据。</p>
+          </div>
+        </div>
+        <div class="check-grid">
+          <div><strong>选科</strong><span>专业组是否可报</span></div>
+          <div><strong>位次</strong><span>是否浪费或过冲</span></div>
+          <div><strong>梯度</strong><span>冲稳保是否均衡</span></div>
+          <div><strong>专业</strong><span>是否过热或限制多</span></div>
+          <div><strong>城市</strong><span>选择是否过窄</span></div>
+          <div><strong>保底</strong><span>兜底是否足够</span></div>
+        </div>
+      </section>
+
+      <section class="section-card" id="report" data-mobile-page="report" data-mobile-tab="account">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">会员报告预览</div>
+            <h2>河南3+1+2完整报告</h2>
+            <p class="muted">这份报告不是替你做决定，而是帮你少踩坑、少漏项、少凭感觉填。重点看：学校层次、专业方向、志愿梯度、选科限制和保底强度。</p>
+          </div>
+          <span class="badge" id="reportStatus">部分锁定</span>
+        </div>
+        <div class="report-grid">
+          <article>
+            <span class="mini-label">考生档案</span>
+            <h3 id="reportProfile">物理 + 化学 + 生物 / 28500位</h3>
+            <p class="muted">报告会根据首选科目、再选科目和河南同方向位次生成。</p>
+          </article>
+          <article>
+            <span class="mini-label">可报范围</span>
+            <h3 id="reportScope">正在计算</h3>
+            <p class="muted">排除首选科目或再选科目不匹配的专业组。</p>
+          </article>
+          <article>
+            <span class="mini-label">梯度结构</span>
+            <h3 id="reportGradient">冲 0 · 稳 0 · 保 0</h3>
+            <p class="muted">会员版展示完整院校清单和替代方案。</p>
+          </article>
+        </div>
+        <div class="gradient-chart" id="gradientChart" aria-label="志愿梯度图"></div>
+      </section>
+
+      <section class="section-card" id="schools" data-mobile-page="schools" data-mobile-tab="schools">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">院校专业组库</div>
+            <h2>河南招生专业组与选科要求</h2>
+          </div>
+          <div class="filter-row">
+            <select id="schoolLevelFilter">
+              <option value="all">全部层次</option>
+              <option>985</option>
+              <option>211</option>
+              <option>双一流</option>
+              <option>省重点</option>
+            </select>
+            <select id="eligibilityFilter">
+              <option value="all">全部状态</option>
+              <option value="eligible">只看可报</option>
+              <option value="ineligible">只看不可报</option>
+            </select>
+          </div>
+        </div>
+        <div class="school-list-summary" id="schoolListSummary"></div>
+        <div class="school-mobile-list" id="schoolMobileList"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>院校/专业组</th>
+                <th>城市</th>
+                <th>层次</th>
+                <th>选科要求</th>
+                <th>河南近三年位次</th>
+                <th>环境评价摘要</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="schoolTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section-card" id="majors" data-mobile-page="majors" data-mobile-tab="schools">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">专业适配</div>
+            <h2>按你的选科判断专业方向</h2>
+            <p class="muted">按教育部本科专业目录的 93 个专业类整理入口，覆盖 845 种本科专业；卡片内展示代表专业和常见选科提醒。</p>
+          </div>
+          <div class="major-tools">
+            <input class="search-input" id="majorSearch" type="search" placeholder="搜索专业，例如：软件工程、会计学" />
+            <button class="secondary-btn" id="openMajorDirectoryBtn" type="button">进入完整专业目录</button>
+          </div>
+        </div>
+        <div class="major-summary">
+          <strong>默认展示常用方向</strong>
+          <span>完整目录已整理为 93 个专业类。首页只展示精选入口，完整内容请进入专业目录查看。</span>
+        </div>
+        <div class="major-grid" id="majorGrid"></div>
+      </section>
+
+      <section class="section-card" id="pricing" data-mobile-page="pricing" data-mobile-tab="account">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">会员权益</div>
+            <h2>付费买的是完整依据，不是几张表</h2>
+            <p class="muted">线上报告型产品，适合不想花几千元找咨询，但又不想只靠网上零散信息填志愿的家庭。</p>
+          </div>
+        </div>
+        <div class="pricing-grid" id="pricingGrid"></div>
+      </section>
+
+      <section class="section-card" data-mobile-tab="account">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">权益对比</div>
+            <h2>付费后多看到什么</h2>
+          </div>
+        </div>
+        <div class="unlock-table">
+          <div>
+            <strong>免费预览</strong>
+            <span>部分推荐结果</span>
+            <span>基础风险概览</span>
+            <span>少量院校信息</span>
+          </div>
+          <div>
+            <strong>完整方案版</strong>
+            <span>全部冲稳保清单</span>
+            <span>排序理由和风险等级</span>
+            <span>专业组风险与不可报提醒</span>
+          </div>
+          <div>
+            <strong>家庭报告版</strong>
+            <span>可打印报告</span>
+            <span>院校专业对比</span>
+            <span>家长版解释和多次模拟</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card" id="environment" data-mobile-page="environment" data-mobile-tab="schools">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">公开信息整理</div>
+            <h2>学校环境公开评价摘要</h2>
+            <p class="muted">本栏目整理公开网络信息中的校园环境、宿舍、食堂、交通等评价要点，仅供了解学校生活氛围参考。内容不代表本站实地核验，也不构成报考建议。</p>
+          </div>
+        </div>
+        <div class="environment-box">
+          <p><strong>公开评价摘要：</strong>较多学生提到校园绿化较好、生活区集中，日常通勤比较方便；也有评价提到部分宿舍楼年代较久。</p>
+          <p><strong>来源：</strong>某某网站 / 作者：某某 / 原文链接 / 访问日期：2026-06-01</p>
+          <p class="muted">为尊重原作者权益，本站仅展示简要摘要，并附原文来源。完整内容请以原网站发布信息为准。</p>
+        </div>
+      </section>
+
+      <section class="section-card" id="data" data-mobile-tab="account">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">数据可信说明</div>
+            <h2>正式上线前必须替换真实数据</h2>
+          </div>
+        </div>
+        <div class="data-grid">
+          <div><strong id="schoolCount">0</strong><span>演示专业组</span></div>
+          <div><strong>2025+</strong><span>河南新高考口径</span></div>
+          <div><strong>3年</strong><span>位次趋势样例</span></div>
+          <div><strong>官方为准</strong><span>考试院/高校信息</span></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="&#25163;&#26426;&#24213;&#37096;&#23548;&#33322;">
+      <button class="active" type="button" data-mobile-tab-target="home" onclick="openMobileTab('home')"><strong>&#39318;&#39029;</strong><span>&#27979;&#19968;&#27979;</span></button>
+      <button type="button" data-mobile-tab-target="recommend" onclick="openMobileTab('recommend')"><strong>&#25512;&#33616;</strong><span>&#20914;&#31283;&#20445;</span></button>
+      <button type="button" data-mobile-tab-target="schools" onclick="openMobileTab('schools')"><strong>&#38498;&#26657;</strong><span>&#26597;&#19987;&#19994;</span></button>
+      <button type="button" data-mobile-tab-target="diagnosis" onclick="openMobileTab('diagnosis')"><strong>&#35786;&#26029;</strong><span>&#26597;&#39118;&#38505;</span></button>
+      <button type="button" data-mobile-tab-target="account" onclick="openMobileTab('account')"><strong>&#25105;&#30340;</strong><span>&#25253;&#21578;</span></button>
+    </nav>
+
+    <section class="major-directory-view" id="majorDirectoryView" aria-label="完整专业目录">
+      <div class="directory-shell">
+        <div class="directory-head">
+          <div>
+            <div class="section-kicker">完整专业目录</div>
+            <h1>93 个专业类，按选科判断适配</h1>
+            <p class="muted">按教育部本科专业目录整理，覆盖 845 种本科专业。可搜索具体专业，也可按门类筛选。</p>
+          </div>
+          <button class="ghost-btn" id="backToPlannerBtn" type="button">返回志愿方案页</button>
+        </div>
+
+        <div class="directory-tools">
+          <input id="majorDirectorySearch" type="search" placeholder="搜索专业，例如：软件工程、口腔医学、会计学" />
+          <select id="disciplineFilter">
+            <option value="all">全部门类</option>
+            <option>哲学</option>
+            <option>经济学</option>
+            <option>法学</option>
+            <option>教育学</option>
+            <option>文学</option>
+            <option>历史学</option>
+            <option>理学</option>
+            <option>工学</option>
+            <option>农学</option>
+            <option>医学</option>
+            <option>管理学</option>
+            <option>艺术学</option>
+          </select>
+        </div>
+
+        <div class="directory-count" id="majorDirectoryCount">共 93 个专业类</div>
+        <div class="major-directory-grid" id="majorDirectoryGrid"></div>
+      </div>
+    </section>
+
+    <section class="school-detail-view" id="schoolDetailView" aria-label="&#38498;&#26657;&#35814;&#24773;">
+      <div class="school-detail-shell">
+        <div class="school-detail-head">
+          <button class="ghost-btn" id="backFromSchoolDetailBtn" type="button">&#36820;&#22238;</button>
+          <div>
+            <span class="badge" id="schoolDetailRisk">&#39118;&#38505;</span>
+            <h1 id="schoolDetailName">&#38498;&#26657;&#35814;&#24773;</h1>
+            <p class="muted" id="schoolDetailMeta">&#19987;&#19994;&#32452;&#12289;&#22478;&#24066;&#12289;&#23618;&#27425;</p>
+          </div>
+        </div>
+        <div class="school-photo-grid" id="schoolPhotoGrid"></div>
+        <div class="school-detail-grid">
+          <article>
+            <span class="mini-label">&#23398;&#26657;&#23448;&#32593;</span>
+            <h3><a id="schoolWebsiteLink" href="#" target="_blank" rel="noopener">&#36827;&#20837;&#23398;&#26657;&#23448;&#32593;</a></h3>
+            <p id="schoolIntroText" class="muted"></p>
+          </article>
+          <article>
+            <span class="mini-label">&#24405;&#21462;&#24773;&#20917;</span>
+            <h3 id="schoolAdmissionTitle">&#36817;&#19977;&#24180;&#20998;&#25968; / &#20301;&#27425;</h3>
+            <p id="schoolAdmissionText" class="muted"></p>
+          </article>
+          <article>
+            <span class="mini-label">&#36873;&#31185;&#19982;&#19987;&#19994;&#32452;</span>
+            <h3 id="schoolSubjectText">&#36873;&#31185;&#35201;&#27714;</h3>
+            <p id="schoolMajorText" class="muted"></p>
+          </article>
+          <article>
+            <span class="mini-label">&#20844;&#24320;&#35780;&#20215;&#25688;&#35201;</span>
+            <h3>&#26657;&#22253;&#12289;&#23487;&#33293;&#12289;&#20132;&#36890;&#31561;&#20844;&#24320;&#20449;&#24687;</h3>
+            <p id="schoolEnvironmentText" class="muted"></p>
+            <p id="schoolSourceText" class="muted"></p>
+          </article>
+        </div>
+        <div class="school-detail-actions">
+          <button class="primary-btn" id="schoolDetailAddBtn" type="button">&#21152;&#20837;&#24535;&#24895;&#34920;</button>
+          <button class="secondary-btn" id="schoolDetailBackBtn" type="button">&#36820;&#22238;&#21015;&#34920;</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <footer class="footer">
+      本站提供的院校推荐、专业分析、环境评价和报告内容均为辅助参考，不代表任何院校官方意见，也不保证最终录取结果。考生和家长应结合各省教育考试院、院校招生章程、当年招生计划等官方信息综合判断。
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
