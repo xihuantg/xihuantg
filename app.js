@@ -494,10 +494,10 @@ function renderPricing() {
     <article class="price-card ${plan.featured ? "featured" : ""}">
       <span class="badge">${plan.featured ? "推荐" : "权益"}</span>
       <h3>${plan.name}</h3>
-      <div class="price">${plan.price}<small> / 年</small></div>
+      <div class="price">${plan.price}<small> / ${plan.period || "本届高考季"}</small></div>
       <p>${plan.desc}</p>
       <p>${plan.perks.join(" · ")}</p>
-      <button class="${plan.featured ? "primary-btn" : "secondary-btn"}" data-plan="${plan.name}" type="button">${plan.featured ? "查看完整方案" : "开通" + plan.name}</button>
+      <button class="${plan.featured ? "primary-btn" : "secondary-btn"}" data-plan="${plan.name}" type="button">${plan.button || "开通" + plan.name}</button>
     </article>
   `).join("");
 }
@@ -507,7 +507,7 @@ function renderReport() {
   const eligible = state.recommendations.filter((item) => item.eligible);
   const counts = countRisks(state.volunteers);
   $("#reportProfile").textContent = `${profile.primary} + ${profile.secondary.join(" + ")} / ${profile.rank}位`;
-  $("#reportScope").textContent = state.member ? `${eligible.length}个可报专业组，${state.recommendations.length - eligible.length}个不可报提醒` : "解锁完整方案后查看全部可报范围";
+  $("#reportScope").textContent = state.member ? `${eligible.length}个可报专业组，${state.recommendations.length - eligible.length}个不可报提醒` : "开通基础版后查看全部可报范围";
   $("#reportGradient").textContent = `冲 ${counts["冲"] || 0} · 稳 ${counts["稳"] || 0} · 保 ${counts["保"] || 0}`;
   $("#reportStatus").textContent = state.member ? "已解锁" : "部分锁定";
   $("#gradientChart").innerHTML = `
@@ -554,7 +554,7 @@ function removeVolunteer(index) {
 
 function exportCsv() {
   if (!state.member) {
-    showToast("导出志愿表是完整方案权益，请先解锁");
+    showToast("导出志愿表是进阶版权益，请先解锁");
     return;
   }
   const rows = [["顺序", "院校", "专业组", "城市", "梯度", "选科要求", "专业", "近三年位次"]];
@@ -684,7 +684,7 @@ function initEvents() {
     updateProfileSummary();
     renderRecommendations();
     renderReport();
-    showToast("已模拟解锁完整方案");
+    showToast("已模拟解锁进阶版");
   });
   $("#loginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和会员订单"));
   $("#mobileLoginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和会员订单"));
@@ -694,7 +694,7 @@ function initEvents() {
     renderRecommendations();
     renderReport();
     renderMobileHomeSummary();
-    showToast("已模拟解锁家庭报告版");
+    showToast("已模拟解锁进阶版");
   });
   $("#exportBtn").addEventListener("click", exportCsv);
   $("#reportBtn").addEventListener("click", () => {
