@@ -1,0 +1,5 @@
+node_modules/
+outputs/
+tools/
+preview-server.cjs
+preview-server.*.log
