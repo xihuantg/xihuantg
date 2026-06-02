@@ -688,6 +688,14 @@ function initEvents() {
   });
   $("#loginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和会员订单"));
   $("#mobileLoginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和会员订单"));
+  $("#mobileUnlockBtn").addEventListener("click", () => {
+    state.member = true;
+    updateProfileSummary();
+    renderRecommendations();
+    renderReport();
+    renderMobileHomeSummary();
+    showToast("已模拟解锁家庭报告版");
+  });
   $("#exportBtn").addEventListener("click", exportCsv);
   $("#reportBtn").addEventListener("click", () => {
     if (!state.member) {
