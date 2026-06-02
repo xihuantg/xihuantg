@@ -343,6 +343,7 @@ function openMobileTab(tabId, shouldScroll = true) {
     return;
   }
   state.mobileTab = tabId;
+  document.body.dataset.mobileTab = tabId;
   document.body.classList.add("mobile-tab-active");
   document.body.classList.remove("mobile-page-active", "school-detail-active");
   document.querySelectorAll("[data-mobile-tab]").forEach((section) => {
@@ -595,7 +596,7 @@ function init() {
   renderPricing();
   refreshAll();
   initEvents();
-  if (isMobileViewport()) openMobileTab("home", false);
+  openMobileTab(isMobileViewport() ? "home" : "home", false);
 }
 
 init();

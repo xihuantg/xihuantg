@@ -1501,4 +1501,78 @@ th {
   .school-detail-actions button {
     width: 100%;
   }
+
+  body[data-mobile-tab] main > section,
+  body[data-mobile-tab] .notice {
+    display: none !important;
+  }
+
+  body[data-mobile-tab="home"]:not(.school-detail-active) main > section[data-mobile-tab="home"],
+  body[data-mobile-tab="recommend"]:not(.school-detail-active) main > section[data-mobile-tab="recommend"],
+  body[data-mobile-tab="diagnosis"]:not(.school-detail-active) main > section[data-mobile-tab="diagnosis"],
+  body[data-mobile-tab="schools"]:not(.school-detail-active) main > section[data-mobile-tab="schools"],
+  body[data-mobile-tab="account"]:not(.school-detail-active) main > section[data-mobile-tab="account"] {
+    display: block !important;
+    width: min(100% - 24px, 520px);
+    margin: 12px auto 18px;
+  }
+
+  body[data-mobile-tab="home"]:not(.school-detail-active) main > section.hero[data-mobile-tab="home"],
+  body[data-mobile-tab="volunteer"]:not(.school-detail-active) main > section.split,
+  body[data-mobile-tab="diagnosis"]:not(.school-detail-active) main > section.split {
+    display: grid !important;
+  }
+
+  body[data-mobile-tab="home"] .hero {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body[data-mobile-tab="home"] .hero-main {
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f2f6fb 100%);
+    box-shadow: 0 14px 32px rgba(15, 37, 58, 0.12);
+  }
+
+  body[data-mobile-tab="home"] .hero-copy h1 {
+    text-align: left;
+    font-size: 34px;
+  }
+
+  body[data-mobile-tab="home"] .hero-copy .intro {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  body[data-mobile-tab="home"] .promise-line {
+    display: inline-flex;
+    padding: 10px 12px;
+    border-color: rgba(201, 138, 46, 0.28);
+    background: #fff6e6;
+    color: var(--primary-dark);
+  }
+
+  body[data-mobile-tab="home"] .report-preview-panel {
+    padding: 16px;
+    border-radius: 14px;
+    box-shadow: 0 12px 28px rgba(15, 37, 58, 0.1);
+  }
+
+  body[data-mobile-tab="recommend"] #recommend,
+  body[data-mobile-tab="diagnosis"] #volunteer,
+  body[data-mobile-tab="schools"] #schools,
+  body[data-mobile-tab="schools"] #majors,
+  body[data-mobile-tab="schools"] #environment,
+  body[data-mobile-tab="account"] #pricing,
+  body[data-mobile-tab="account"] #why-pay,
+  body[data-mobile-tab="account"] #report,
+  body[data-mobile-tab="account"] #data {
+    border-radius: 14px;
+    box-shadow: 0 10px 26px rgba(15, 37, 58, 0.08);
+  }
 }
