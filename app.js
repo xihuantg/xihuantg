@@ -3,6 +3,9 @@
 let state = {
   member: false,
   activeFilter: "all",
+  mobileTab: "home",
+  detailReturnTab: "recommend",
+  activeDetailId: null,
   recommendations: [],
   volunteers: []
 };
@@ -127,6 +130,8 @@ function renderRecommendations() {
         <p><strong>学校环境公开评价摘要：</strong>${state.member ? item.environment.replace("公开评价摘要：", "") : "解锁完整方案后查看校园环境、宿舍、食堂、交通等公开评价摘要。"}</p>
         <p>${state.member || !locked ? item.reason : "解锁后查看完整排序理由、风险解释和替代方案。"}</p>
         <div class="action-row">
+          <button type="button" data-detail="${item.id}">&#26597;&#30475;&#35814;&#24773;</button>
+
           <button type="button" data-add="${item.id}">加入志愿表</button>
           <button type="button" data-fav="${item.id}">收藏</button>
         </div>
@@ -241,7 +246,7 @@ function renderSchools() {
         <td>${item.ranks.join(" / ")}</td>
         <td>${state.member ? `${item.environment}<br><span class="muted">${item.source}</span>` : "解锁后查看摘要与来源"}</td>
         <td><span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "可报" : "不可报"}</span></td>
-        <td><button class="secondary-btn" data-school-add="${item.id}" type="button">加入</button></td>
+        <td><button class="secondary-btn" data-school-detail="${item.id}" type="button">&#35814;&#24773;</button> <button class="secondary-btn" data-school-add="${item.id}" type="button">加入</button></td>
       </tr>
     `;
   }).join("");
@@ -320,29 +325,73 @@ function isMobileViewport() {
   return window.matchMedia("(max-width: 720px)").matches;
 }
 
-function openMobilePage(pageId, title) {
+function normalizeMobileTab(pageId) {
+  if (pageId === "volunteer") return "diagnosis";
+  if (["schools", "majors", "environment"].includes(pageId)) return "schools";
+  if (["pricing", "report", "why-pay", "data"].includes(pageId)) return "account";
+  if (pageId === "recommend") return "recommend";
+  return "home";
+}
+
+function openMobileTab(tabId, shouldScroll = true) {
   if (!isMobileViewport()) {
-    if (pageId === "home") {
+    if (tabId === "home") {
       window.location.hash = "home";
     } else {
-      window.location.hash = pageId;
+      window.location.hash = tabId;
     }
     return;
   }
-  document.body.classList.add("mobile-page-active");
-  document.querySelectorAll("[data-mobile-page], #home").forEach((section) => {
-    section.classList.remove("mobile-current");
+  state.mobileTab = tabId;
+  document.body.classList.add("mobile-tab-active");
+  document.body.classList.remove("mobile-page-active", "school-detail-active");
+  document.querySelectorAll("[data-mobile-tab]").forEach((section) => {
+    section.classList.toggle("mobile-current", section.dataset.mobileTab === tabId);
   });
-  const target = pageId === "home" ? $("#home") : document.querySelector(`[data-mobile-page="${pageId}"]`);
-  if (target) target.classList.add("mobile-current");
-  $("#mobilePageTitle").textContent = title;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  document.querySelectorAll("[data-mobile-tab-target]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.mobileTabTarget === tabId);
+  });
+  if (shouldScroll) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openMobilePage(pageId) {
+  openMobileTab(normalizeMobileTab(pageId));
 }
 
 function closeMobilePage() {
-  document.body.classList.remove("mobile-page-active");
-  document.querySelectorAll(".mobile-current").forEach((section) => section.classList.remove("mobile-current"));
+  openMobileTab("home");
+}
+
+function openSchoolDetail(id, returnTab = state.mobileTab || "recommend") {
+  const item = state.recommendations.find((program) => program.id === id) || programs.find((program) => program.id === id);
+  if (!item) return;
+  state.activeDetailId = id;
+  state.detailReturnTab = returnTab;
+  $("#schoolDetailRisk").textContent = item.risk || "详情";
+  $("#schoolDetailName").textContent = item.school;
+  $("#schoolDetailMeta").textContent = `${item.group} · ${item.city} · ${item.level} · ${item.batch}`;
+  $("#schoolWebsiteLink").href = item.website || "#";
+  $("#schoolWebsiteLink").textContent = item.website ? "进入学校官网" : "官网待补充";
+  $("#schoolIntroText").textContent = item.schoolIntro || item.note || "学校简介待补充，正式上线前请替换为真实可核验信息。";
+  $("#schoolAdmissionTitle").textContent = `${item.scores.join(" / ")} 分`;
+  $("#schoolAdmissionText").textContent = `${item.admissionSummary || ""} 近三年位次：${item.ranks.join(" / ")}；计划：${item.plan}人 ${item.planChange}`;
+  $("#schoolSubjectText").textContent = subjectText(item);
+  $("#schoolMajorText").textContent = `${item.majors.join("、")} · ${item.tuition} · 热度${item.heat}`;
+  $("#schoolEnvironmentText").textContent = state.member ? item.environment : "免费版展示基础信息；解锁后查看完整校园环境、宿舍、食堂、交通等公开评价摘要。";
+  $("#schoolSourceText").textContent = state.member ? `${item.source} ${item.officialNote || ""}` : "完整来源和风险说明为会员报告权益。";
+  $("#schoolPhotoGrid").innerHTML = (item.photos || []).slice(0, 3).map((photo, index) => `
+    <div class="school-photo-card">
+      <span>校园环境照片</span>
+      <small>样板图 ${index + 1} · ${photo}</small>
+    </div>
+  `).join("");
+  document.body.classList.add("school-detail-active");
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function closeSchoolDetail() {
+  document.body.classList.remove("school-detail-active");
+  openMobileTab(state.detailReturnTab || "recommend", true);
 }
 
 function renderPricing() {
@@ -453,7 +502,7 @@ function initEvents() {
     }
     refreshAll();
     showToast("已按河南3+1+2选科和位次重新生成方案");
-    if (isMobileViewport()) openMobilePage("recommend", "智能推荐");
+    if (isMobileViewport()) openMobileTab("recommend");
   });
 
   ["primarySubject", "secondSubjectA", "secondSubjectB", "score", "rank", "batch", "majorPreference", "cityPreference"].forEach((id) => {
@@ -472,6 +521,8 @@ function initEvents() {
   document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
+    if (target.dataset.detail) openSchoolDetail(target.dataset.detail, "recommend");
+    if (target.dataset.schoolDetail) openSchoolDetail(target.dataset.schoolDetail, "schools");
     if (target.dataset.add) addVolunteer(target.dataset.add);
     if (target.dataset.schoolAdd) addVolunteer(target.dataset.schoolAdd);
     if (target.dataset.fav) showToast("已收藏，可在真实版本接入账号收藏夹");
@@ -516,6 +567,14 @@ function initEvents() {
   $("#majorDirectorySearch").addEventListener("input", renderMajorDirectory);
   $("#disciplineFilter").addEventListener("change", renderMajorDirectory);
   $("#mobileBackBtn").addEventListener("click", closeMobilePage);
+  $("#backFromSchoolDetailBtn").addEventListener("click", closeSchoolDetail);
+  $("#schoolDetailBackBtn").addEventListener("click", closeSchoolDetail);
+  $("#schoolDetailAddBtn").addEventListener("click", () => {
+    if (state.activeDetailId) addVolunteer(state.activeDetailId);
+  });
+  document.querySelectorAll("[data-mobile-tab-target]").forEach((button) => {
+    button.addEventListener("click", () => openMobileTab(button.dataset.mobileTabTarget));
+  });
   document.querySelectorAll("[data-mobile-open]").forEach((button) => {
     button.addEventListener("click", () => openMobilePage(button.dataset.mobileOpen, button.dataset.title));
   });
@@ -536,6 +595,7 @@ function init() {
   renderPricing();
   refreshAll();
   initEvents();
+  if (isMobileViewport()) openMobileTab("home", false);
 }
 
 init();

@@ -981,7 +981,9 @@ th {
 }
 
 .mobile-home,
-.mobile-page-header {
+.mobile-page-header,
+.mobile-bottom-nav,
+.school-detail-view {
   display: none;
 }
 
@@ -998,6 +1000,94 @@ th {
 
 .directory-mode .major-directory-view {
   display: block;
+}
+
+.school-detail-active main,
+.school-detail-active .footer {
+  display: none;
+}
+
+.school-detail-active .school-detail-view {
+  display: block;
+}
+
+.school-detail-view {
+  width: min(1120px, calc(100% - 32px));
+  margin: 18px auto 36px;
+}
+
+.school-detail-shell {
+  padding: clamp(18px, 2.5vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.school-detail-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 16px;
+}
+
+.school-detail-head h1 {
+  margin: 8px 0;
+  text-align: left;
+  font-size: clamp(30px, 5vw, 48px);
+}
+
+.school-photo-grid,
+.school-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.school-photo-card {
+  display: grid;
+  align-content: end;
+  min-height: 150px;
+  padding: 14px;
+  border-radius: 8px;
+  background:
+    linear-gradient(140deg, rgba(23, 50, 77, 0.82), rgba(201, 138, 46, 0.62)),
+    linear-gradient(45deg, #d8e0e8, #f5f0e6);
+  color: #fff;
+  overflow: hidden;
+}
+
+.school-photo-card span {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.school-photo-card small {
+  margin-top: 6px;
+  opacity: 0.86;
+}
+
+.school-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.school-detail-grid article {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.school-detail-grid a {
+  color: var(--primary);
+}
+
+.school-detail-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
 
 .directory-shell {
@@ -1289,5 +1379,126 @@ th {
 
   .directory-head {
     flex-direction: column;
+  }
+
+  body {
+    padding-bottom: 92px;
+  }
+
+  .topbar {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 14px;
+    background: #fff;
+  }
+
+  .topbar > .ghost-btn {
+    display: none;
+  }
+
+  .brand small {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-home,
+  .mobile-page-header {
+    display: none !important;
+  }
+
+  body:not(.mobile-tab-active):not(.school-detail-active) main > section[data-mobile-tab="home"] {
+    display: grid;
+  }
+
+  body.mobile-tab-active:not(.school-detail-active) main > section.mobile-current {
+    display: block;
+    width: min(100% - 24px, 520px);
+    margin: 12px auto 18px;
+  }
+
+  body.mobile-tab-active:not(.school-detail-active) main > section.mobile-current.hero {
+    display: grid;
+  }
+
+  body.mobile-tab-active:not(.school-detail-active) main > section.mobile-current.split {
+    display: grid;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 80;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    background: var(--primary-dark);
+    box-shadow: 0 18px 46px rgba(15, 37, 58, 0.32);
+  }
+
+  .mobile-bottom-nav button {
+    display: grid;
+    gap: 2px;
+    min-height: 52px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .mobile-bottom-nav button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .mobile-bottom-nav span {
+    font-size: 11px;
+    font-weight: 800;
+    opacity: 0.9;
+  }
+
+  .school-detail-active .mobile-bottom-nav {
+    display: none;
+  }
+
+  .school-detail-view {
+    width: min(100% - 24px, 520px);
+    margin: 12px auto 24px;
+  }
+
+  .school-detail-shell {
+    padding: 16px;
+  }
+
+  .school-detail-head,
+  .school-photo-grid,
+  .school-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .school-detail-head h1 {
+    font-size: 30px;
+  }
+
+  .school-photo-card {
+    min-height: 120px;
+  }
+
+  .school-detail-actions {
+    flex-direction: column;
+  }
+
+  .school-detail-actions button {
+    width: 100%;
   }
 }

@@ -53,7 +53,7 @@
         <strong id="mobilePageTitle">功能页面</strong>
       </div>
 
-      <section class="hero" id="home">
+      <section class="hero" id="home" data-mobile-tab="home">
         <div class="hero-main">
           <div class="hero-copy">
             <div class="section-kicker">河南新高考 · 3+1+2模式</div>
@@ -219,7 +219,7 @@
         <span>河南从2022年秋季入学高一学生开始实行高考综合改革，2025年起首届新高考按“3+1+2”模式录取。本演示数据用于产品样板，正式收费前需替换为真实可核验数据。</span>
       </section>
 
-      <section class="section-card shanhe" id="why-pay" data-mobile-page="why-pay">
+      <section class="section-card shanhe" id="why-pay" data-mobile-page="why-pay" data-mobile-tab="account">
         <div class="section-head">
           <div>
             <div class="section-kicker">山河四省家庭场景</div>
@@ -296,7 +296,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="recommend" data-mobile-page="recommend">
+      <section class="section-card" id="recommend" data-mobile-page="recommend" data-mobile-tab="recommend">
         <div class="section-head">
           <div>
             <div class="section-kicker">智能推荐</div>
@@ -315,7 +315,7 @@
         <div class="recommend-grid" id="recommendGrid"></div>
       </section>
 
-      <section class="section-card split" id="volunteer" data-mobile-page="volunteer">
+      <section class="section-card split" id="volunteer" data-mobile-page="volunteer" data-mobile-tab="diagnosis">
         <div>
           <div class="section-head compact">
             <div>
@@ -336,7 +336,7 @@
         </aside>
       </section>
 
-      <section class="section-card">
+      <section class="section-card" data-mobile-tab="diagnosis">
         <div class="section-head">
           <div>
             <div class="section-kicker">志愿避坑体检</div>
@@ -354,7 +354,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="report" data-mobile-page="report">
+      <section class="section-card" id="report" data-mobile-page="report" data-mobile-tab="account">
         <div class="section-head">
           <div>
             <div class="section-kicker">会员报告预览</div>
@@ -383,7 +383,7 @@
         <div class="gradient-chart" id="gradientChart" aria-label="志愿梯度图"></div>
       </section>
 
-      <section class="section-card" id="schools" data-mobile-page="schools">
+      <section class="section-card" id="schools" data-mobile-page="schools" data-mobile-tab="schools">
         <div class="section-head">
           <div>
             <div class="section-kicker">院校专业组库</div>
@@ -423,7 +423,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="majors" data-mobile-page="majors">
+      <section class="section-card" id="majors" data-mobile-page="majors" data-mobile-tab="schools">
         <div class="section-head">
           <div>
             <div class="section-kicker">专业适配</div>
@@ -442,7 +442,7 @@
         <div class="major-grid" id="majorGrid"></div>
       </section>
 
-      <section class="section-card" id="pricing" data-mobile-page="pricing">
+      <section class="section-card" id="pricing" data-mobile-page="pricing" data-mobile-tab="account">
         <div class="section-head">
           <div>
             <div class="section-kicker">会员权益</div>
@@ -453,7 +453,7 @@
         <div class="pricing-grid" id="pricingGrid"></div>
       </section>
 
-      <section class="section-card">
+      <section class="section-card" data-mobile-tab="account">
         <div class="section-head">
           <div>
             <div class="section-kicker">权益对比</div>
@@ -482,7 +482,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="environment" data-mobile-page="environment">
+      <section class="section-card" id="environment" data-mobile-page="environment" data-mobile-tab="schools">
         <div class="section-head">
           <div>
             <div class="section-kicker">公开信息整理</div>
@@ -497,7 +497,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="data">
+      <section class="section-card" id="data" data-mobile-tab="account">
         <div class="section-head">
           <div>
             <div class="section-kicker">数据可信说明</div>
@@ -512,6 +512,14 @@
         </div>
       </section>
     </main>
+
+    <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="&#25163;&#26426;&#24213;&#37096;&#23548;&#33322;">
+      <button class="active" type="button" data-mobile-tab-target="home"><strong>&#39318;&#39029;</strong><span>&#27979;&#19968;&#27979;</span></button>
+      <button type="button" data-mobile-tab-target="recommend"><strong>&#25512;&#33616;</strong><span>&#20914;&#31283;&#20445;</span></button>
+      <button type="button" data-mobile-tab-target="diagnosis"><strong>&#35786;&#26029;</strong><span>&#26597;&#39118;&#38505;</span></button>
+      <button type="button" data-mobile-tab-target="schools"><strong>&#38498;&#26657;</strong><span>&#26597;&#19987;&#19994;</span></button>
+      <button type="button" data-mobile-tab-target="account"><strong>&#25105;&#30340;</strong><span>&#25253;&#21578;</span></button>
+    </nav>
 
     <section class="major-directory-view" id="majorDirectoryView" aria-label="完整专业目录">
       <div class="directory-shell">
@@ -545,6 +553,47 @@
 
         <div class="directory-count" id="majorDirectoryCount">共 93 个专业类</div>
         <div class="major-directory-grid" id="majorDirectoryGrid"></div>
+      </div>
+    </section>
+
+    <section class="school-detail-view" id="schoolDetailView" aria-label="&#38498;&#26657;&#35814;&#24773;">
+      <div class="school-detail-shell">
+        <div class="school-detail-head">
+          <button class="ghost-btn" id="backFromSchoolDetailBtn" type="button">&#36820;&#22238;</button>
+          <div>
+            <span class="badge" id="schoolDetailRisk">&#39118;&#38505;</span>
+            <h1 id="schoolDetailName">&#38498;&#26657;&#35814;&#24773;</h1>
+            <p class="muted" id="schoolDetailMeta">&#19987;&#19994;&#32452;&#12289;&#22478;&#24066;&#12289;&#23618;&#27425;</p>
+          </div>
+        </div>
+        <div class="school-photo-grid" id="schoolPhotoGrid"></div>
+        <div class="school-detail-grid">
+          <article>
+            <span class="mini-label">&#23398;&#26657;&#23448;&#32593;</span>
+            <h3><a id="schoolWebsiteLink" href="#" target="_blank" rel="noopener">&#36827;&#20837;&#23398;&#26657;&#23448;&#32593;</a></h3>
+            <p id="schoolIntroText" class="muted"></p>
+          </article>
+          <article>
+            <span class="mini-label">&#24405;&#21462;&#24773;&#20917;</span>
+            <h3 id="schoolAdmissionTitle">&#36817;&#19977;&#24180;&#20998;&#25968; / &#20301;&#27425;</h3>
+            <p id="schoolAdmissionText" class="muted"></p>
+          </article>
+          <article>
+            <span class="mini-label">&#36873;&#31185;&#19982;&#19987;&#19994;&#32452;</span>
+            <h3 id="schoolSubjectText">&#36873;&#31185;&#35201;&#27714;</h3>
+            <p id="schoolMajorText" class="muted"></p>
+          </article>
+          <article>
+            <span class="mini-label">&#20844;&#24320;&#35780;&#20215;&#25688;&#35201;</span>
+            <h3>&#26657;&#22253;&#12289;&#23487;&#33293;&#12289;&#20132;&#36890;&#31561;&#20844;&#24320;&#20449;&#24687;</h3>
+            <p id="schoolEnvironmentText" class="muted"></p>
+            <p id="schoolSourceText" class="muted"></p>
+          </article>
+        </div>
+        <div class="school-detail-actions">
+          <button class="primary-btn" id="schoolDetailAddBtn" type="button">&#21152;&#20837;&#24535;&#24895;&#34920;</button>
+          <button class="secondary-btn" id="schoolDetailBackBtn" type="button">&#36820;&#22238;&#21015;&#34920;</button>
+        </div>
       </div>
     </section>
 
