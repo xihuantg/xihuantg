@@ -35,6 +35,48 @@ function subjectText(item) {
   return `${item.primary} + ${item.secondary.join("+")}`;
 }
 
+function difficultyClass(level = "") {
+  if (level.includes("很高")) return "hard";
+  if (level.includes("较高")) return "medium-hard";
+  if (level.includes("较低")) return "easy";
+  return "medium";
+}
+
+function programDeepSummary(item) {
+  return `
+    <div class="deep-summary">
+      <span class="difficulty-pill ${difficultyClass(item.difficulty)}">${item.difficulty || "难度待补充"}</span>
+      <span>${item.employmentOutlook || "就业方向待补充"}</span>
+    </div>
+  `;
+}
+
+function paidProgramDetail(item) {
+  return state.member
+    ? `
+      <p><strong>考研/升学：</strong>${item.postgraduatePath}</p>
+      <p><strong>适合谁学：</strong>${item.fitProfile}</p>
+      <p><strong>怎么学：</strong>${item.studyPlan}</p>
+    `
+    : `<p class="locked-line">进阶版解锁考研升学、适合人群、大学四年学习建议和替代院校说明。</p>`;
+}
+
+function majorSearchText(major) {
+  return [
+    major.discipline,
+    major.name,
+    major.examples.join(""),
+    major.direction,
+    major.risk,
+    major.employment,
+    major.postgraduate,
+    major.fitFor,
+    major.studyAdvice,
+    major.difficulty,
+    major.difficultyReason
+  ].join("");
+}
+
 function matchesSubjects(item, profile) {
   const primaryOk = item.primary === "不限" || item.primary === profile.primary;
   const secondaryOk = item.secondary.includes("不限") || item.secondary.every((subject) => profile.secondary.includes(subject));
@@ -127,8 +169,11 @@ function renderRecommendations() {
           <span><strong>${item.plan}人 ${item.planChange}</strong>招生计划</span>
         </div>
         <p class="muted">${item.majors.join("、")} · ${item.tuition} · 热度${item.heat}</p>
-        <p><strong>学校环境公开评价摘要：</strong>${state.member ? item.environment.replace("公开评价摘要：", "") : "解锁完整方案后查看校园环境、宿舍、食堂、交通等公开评价摘要。"}</p>
-        <p>${state.member || !locked ? item.reason : "解锁后查看完整排序理由、风险解释和替代方案。"}</p>
+        ${programDeepSummary(item)}
+        <p><strong>适合画像：</strong>${item.fitProfile || "适合人群待补充"}；<strong>学习强度：</strong>${item.difficultyReason || "难度说明待补充"}</p>
+        <p><strong>学校环境公开评价摘要：</strong>${state.member ? item.environment.replace("公开评价摘要：", "") : "进阶版解锁后查看校园环境、宿舍、食堂、交通等公开评价摘要。"}</p>
+        <p>${state.member || !locked ? item.reason : "进阶版查看排序理由、风险解释和替代方案。"}</p>
+        ${locked ? "" : paidProgramDetail(item)}
         <div class="action-row">
           <button type="button" data-detail="${item.id}">&#26597;&#30475;&#35814;&#24773;</button>
 
@@ -264,7 +309,7 @@ function renderSchools() {
         <td>${item.level}</td>
         <td>${subjectText(item)}</td>
         <td>${item.ranks.join(" / ")}</td>
-        <td>${state.member ? `${item.environment}<br><span class="muted">${item.source}</span>` : "解锁后查看摘要与来源"}</td>
+        <td>${item.employmentOutlook}<br><span class="muted">难度：${item.difficulty} · ${item.transferDifficulty}转专业</span></td>
         <td><span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "可报" : "不可报"}</span></td>
         <td><button class="secondary-btn" data-school-detail="${item.id}" type="button">&#35814;&#24773;</button> <button class="secondary-btn" data-school-add="${item.id}" type="button">加入</button></td>
       </tr>
@@ -303,6 +348,11 @@ function renderSchoolMobileCard(item, stillEligible) {
         <div><span>计划变化</span><strong>${item.plan}人 ${item.planChange}</strong></div>
       </div>
       <p>${item.majors.slice(0, 3).join("、")} · ${item.tuition} · 热度${item.heat}</p>
+      ${programDeepSummary(item)}
+      <div class="school-mobile-deep">
+        <p><strong>考研升学：</strong>${item.postgraduatePath}</p>
+        <p><strong>转专业：</strong>${item.transferDifficulty} · ${state.member ? item.transferPolicy : "进阶版查看具体限制和校内路径"}</p>
+      </div>
       <p class="muted">${stillEligible ? item.note : `你的选科不满足 ${subjectText(item)}，正式填报前应排除。`}</p>
       <div class="school-mobile-actions">
         <button class="secondary-btn" data-school-detail="${item.id}" type="button">查看详情</button>
@@ -322,7 +372,7 @@ function renderMajors() {
   const profile = getProfile();
   const keyword = $("#majorSearch").value.trim();
   const filtered = majorProfiles.filter((major) => {
-    const haystack = `${major.discipline}${major.name}${major.examples.join("")}${major.direction}${major.risk}`;
+    const haystack = majorSearchText(major);
     return !keyword || haystack.includes(keyword);
   });
   const visible = keyword ? filtered.slice(0, 9) : majorProfiles.slice(0, 9);
@@ -347,7 +397,13 @@ function renderMajorCard(major, ok) {
       </div>
       <p><strong>常见要求：</strong>${major.primary} + ${major.secondary.join("+")}</p>
       <p><strong>代表专业：</strong>${major.examples.join("、")}</p>
-      <p>${major.direction}</p>
+      <div class="major-deep-grid">
+        <span class="difficulty-pill ${difficultyClass(major.difficulty)}">${major.difficulty}</span>
+        <span>${major.employment}</span>
+      </div>
+      <p><strong>适合谁：</strong>${major.fitFor}</p>
+      <p><strong>考研/升学：</strong>${state.member ? major.postgraduate : "进阶版查看升学依赖度和常见方向。"}</p>
+      <p><strong>怎么学：</strong>${state.member ? major.studyAdvice : "进阶版查看大学四年学习建议。"}</p>
       <p>${major.risk}</p>
     </article>
   `;
@@ -358,7 +414,7 @@ function renderMajorDirectory() {
   const keyword = $("#majorDirectorySearch").value.trim();
   const discipline = $("#disciplineFilter").value;
   const filtered = majorProfiles.filter((major) => {
-    const haystack = `${major.discipline}${major.name}${major.examples.join("")}${major.direction}${major.risk}`;
+    const haystack = majorSearchText(major);
     const keywordOk = !keyword || haystack.includes(keyword);
     const disciplineOk = discipline === "all" || major.discipline === discipline;
     return keywordOk && disciplineOk;
@@ -467,6 +523,21 @@ function openSchoolDetail(id, returnTab = state.mobileTab || "recommend") {
     <p><strong>学费与热度：</strong>${item.tuition} · 热度${item.heat}</p>
     <p><strong>选科匹配：</strong>${item.eligible ? "当前选科可报。" : "当前选科不可报，需要更换专业组或核对招生章程。"}</p>
     <p><strong>专业提醒：</strong>${item.note}</p>
+  `;
+  $("#schoolCareerText").innerHTML = `
+    <p><strong>就业方向：</strong>${item.employmentOutlook}</p>
+    <p><strong>考研/升学：</strong>${state.member ? item.postgraduatePath : "进阶版解锁考研方向、升学依赖度和职业路径解释。"}</p>
+  `;
+  $("#schoolFitText").innerHTML = `
+    <p><strong>适合谁学：</strong>${item.fitProfile}</p>
+    <p><strong>学习强度：</strong><span class="difficulty-pill ${difficultyClass(item.difficulty)}">${item.difficulty}</span> ${item.difficultyReason}</p>
+    <p><strong>怎么学：</strong>${state.member ? item.studyPlan : "进阶版解锁大学四年学习建议。"}</p>
+  `;
+  $("#schoolTransferText").innerHTML = `
+    <p><strong>转专业难度：</strong><span class="difficulty-pill ${difficultyClass(item.transferDifficulty)}">${item.transferDifficulty}</span></p>
+    <p><strong>转专业说明：</strong>${state.member ? item.transferPolicy : "进阶版查看转专业限制、名额和绩点要求样板说明。"}</p>
+    <p><strong>校内提升路径：</strong>${state.member ? item.campusPath : "进阶版查看辅修、双学位、竞赛、实习和考研路径。"}</p>
+    <p class="muted">正式上线前需以学校当年本科生手册、教务处政策和招生章程为准。</p>
   `;
   $("#schoolEnvironmentText").innerHTML = state.member
     ? `<p>${item.environment}</p><ul>${(item.reviewHighlights || []).map((text) => `<li>${text}</li>`).join("")}</ul>`

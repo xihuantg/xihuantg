@@ -1998,6 +1998,236 @@ const majorProfiles = [
   }
 ];
 
+const programDeepInfoTemplates = {
+  computer: {
+    employmentOutlook: "软件开发、人工智能、数据平台、信息安全、互联网和企业数字化岗位，实习项目和城市资源影响较大。",
+    postgraduatePath: "读研可走计算机、软件工程、人工智能、网络安全等方向；本科就业也可行，但项目能力很关键。",
+    fitProfile: "适合数学逻辑较好、愿意长期写代码、能接受持续自学和项目迭代的学生。",
+    studyPlan: "大一打好高数、线代和编程基础，大二开始做项目、刷算法、参加竞赛或实习，大三明确就业或考研路线。",
+    difficulty: "较高",
+    difficultyReason: "课程更新快，数学、编程和项目实践都要跟上。",
+    transferDifficulty: "偏难",
+    transferPolicy: "计算机和人工智能方向通常热度高，转入名额有限，往往看绩点、基础课成绩和学院名额。",
+    campusPath: "建议关注实验班、创新创业项目、算法竞赛、校企实习和保研/考研通道。"
+  },
+  medicine: {
+    employmentOutlook: "医院、基层医疗、医学科研、公共卫生和医药相关岗位，职业稳定性强但培养周期长。",
+    postgraduatePath: "临床和口腔方向通常与考研、规培、专培强相关，升学和执业路径需要提前规划。",
+    fitProfile: "适合自律强、抗压能力好、能接受长期学习和临床训练的学生。",
+    studyPlan: "重视基础医学、临床课程和实践轮转，尽早了解考研、规培、执业资格和医院招聘要求。",
+    difficulty: "很高",
+    difficultyReason: "学习周期长、课程密集，职业路径对学历和资格要求高。",
+    transferDifficulty: "偏难",
+    transferPolicy: "医学类专业通常转入限制更严格，常受专业容量、选科、体检和培养体系约束。",
+    campusPath: "建议重点看附属医院资源、临床实践机会、考研去向和规培基地。"
+  },
+  engineering: {
+    employmentOutlook: "电网、制造业、自动化设备、机器人、通信、工程技术和智能制造岗位。",
+    postgraduatePath: "读研可走电气、控制、通信、机械、电子信息等方向；部分岗位本科就业也较稳定。",
+    fitProfile: "适合物理和数学基础较好、喜欢动手实践、能接受实验和工程项目的学生。",
+    studyPlan: "重点学好电路、控制、信号、机械基础和编程，争取实验项目、竞赛和企业实习。",
+    difficulty: "较高",
+    difficultyReason: "工科基础课多，理论和实践都不能偏废。",
+    transferDifficulty: "中等",
+    transferPolicy: "工科内部转专业相对有路径，但热门方向仍看绩点、名额和先修课程。",
+    campusPath: "建议关注实验室、工程训练中心、校企合作、电赛/机器人大赛和实习基地。"
+  },
+  teacher: {
+    employmentOutlook: "中小学教师、教研、教育管理、培训产品和公共部门岗位，地区编制影响较大。",
+    postgraduatePath: "可走教育学、学科教学、心理学、课程与教学论等方向，考编和教师资格需要同步准备。",
+    fitProfile: "适合表达清楚、有耐心、愿意长期面对学生和课堂管理的学生。",
+    studyPlan: "尽早准备普通话、教师资格、试讲和教育实习，关注目标地区教师招聘要求。",
+    difficulty: "中等",
+    difficultyReason: "专业课难度适中，但资格证、实习和编制竞争需要长期准备。",
+    transferDifficulty: "中等",
+    transferPolicy: "师范类转入转出通常要看学院名额和培养要求，公费师范等特殊类型需单独核对。",
+    campusPath: "建议关注师范认证、教育实习基地、教师资格通过率和本地教师招聘资源。"
+  },
+  law: {
+    employmentOutlook: "公务员、律所、企业法务、合规、媒体传播和公共管理岗位，院校层次和实习影响大。",
+    postgraduatePath: "法学可考虑法硕、学硕、法律职业资格考试；新闻传播和中文方向可走考公、教师或新媒体。",
+    fitProfile: "适合阅读量大、表达能力强、逻辑清楚、愿意背诵和写作的学生。",
+    studyPlan: "法学重视法考和案例训练，新闻中文重视写作作品、实习和公共表达。",
+    difficulty: "中等",
+    difficultyReason: "入门不算难，但高质量就业依赖证书、写作、实习和长期积累。",
+    transferDifficulty: "中等",
+    transferPolicy: "人文社科类转专业通常比热门工科宽松一些，但法学等热门方向仍看绩点和名额。",
+    campusPath: "建议关注模拟法庭、法考辅导、媒体实习、社团写作和考公资源。"
+  },
+  finance: {
+    employmentOutlook: "银行、证券、会计、审计、企业财务、税务、风控和数据分析岗位。",
+    postgraduatePath: "可走金融、会计、审计、应用经济、管理类研究生，也可准备 CPA、ACCA、初级会计等证书。",
+    fitProfile: "适合数字敏感、沟通能力较好、愿意考证和实习的学生。",
+    studyPlan: "大一大二打好数学、统计和会计基础，大二后准备证书、数据工具和金融财会实习。",
+    difficulty: "中等",
+    difficultyReason: "课程难度中等，但就业竞争和证书压力明显。",
+    transferDifficulty: "中等",
+    transferPolicy: "财经管理类转入通常看绩点和名额，会计、金融等热门专业竞争更强。",
+    campusPath: "建议关注实习渠道、校友资源、财经竞赛、证书支持和郑州本地金融财税岗位。"
+  },
+  material: {
+    employmentOutlook: "制造业、材料加工、机械电子、检测、工艺工程和新能源相关岗位。",
+    postgraduatePath: "材料、机械、控制、化工、新能源等方向读研可提升岗位选择空间。",
+    fitProfile: "适合愿意接触实验、工厂工艺和工程现场，不排斥传统制造行业的学生。",
+    studyPlan: "重视工程制图、材料基础、机械电子、实验技能和企业实习，提前了解行业方向。",
+    difficulty: "中等",
+    difficultyReason: "理论不算最难，但专业方向和行业选择需要提前判断。",
+    transferDifficulty: "中等",
+    transferPolicy: "普通工科转专业一般有机会，但转向计算机、电气等热门方向会更难。",
+    campusPath: "建议关注工程训练、企业实习、专升本/考研路径和校内转专业窗口。"
+  },
+  biology: {
+    employmentOutlook: "生物教育、检测、医药研发辅助、生态环保、科研助理和公共机构岗位。",
+    postgraduatePath: "升学依赖度较高，可走生物学、生态学、学科教学、生物技术、药学相关方向。",
+    fitProfile: "适合喜欢实验、记忆和理解并重、愿意读研或考教师资格的学生。",
+    studyPlan: "重视实验课、科研训练、教师资格或考研规划，尽早判断走教育、科研还是产业方向。",
+    difficulty: "较高",
+    difficultyReason: "实验和理论并重，本科直接就业空间相对有限，深造规划重要。",
+    transferDifficulty: "中等",
+    transferPolicy: "生命科学类内部转动通常有路径，转向医学或热门工科需重点核对限制。",
+    campusPath: "建议关注实验室开放、师范认证、考研去向、教师资格和生物竞赛/科研训练。"
+  },
+  social: {
+    employmentOutlook: "公共服务、调研咨询、企业管理、城市治理、公益组织和综合管理岗位。",
+    postgraduatePath: "可走社会学、公共管理、经济管理、法律硕士等方向，城市资源和实习积累重要。",
+    fitProfile: "适合表达沟通好、愿意做调研、能接受岗位方向较分散的学生。",
+    studyPlan: "多做调研项目、数据分析、实习和公文写作训练，提前准备考公或就业方向。",
+    difficulty: "中等",
+    difficultyReason: "课程压力不算最高，但就业路径需要主动规划和实习积累。",
+    transferDifficulty: "中等",
+    transferPolicy: "社科经管类转专业通常看绩点和学院名额，跨到热门工科难度更大。",
+    campusPath: "建议关注城市实习、公共管理项目、校友资源、考公辅导和交换实践。"
+  }
+};
+
+function pickProgramTemplate(program) {
+  const text = `${program.group}${program.majors.join("")}${program.note || ""}`;
+  if (/临床|口腔|医学|麻醉/.test(text)) return programDeepInfoTemplates.medicine;
+  if (/计算机|软件|人工智能|数据|信息安全/.test(text)) return programDeepInfoTemplates.computer;
+  if (/电气|自动化|电子|通信|机械|机器人/.test(text)) return programDeepInfoTemplates.engineering;
+  if (/师范|教育|思想政治|历史学/.test(text)) return programDeepInfoTemplates.teacher;
+  if (/法学|新闻|传播|汉语言|中文/.test(text)) return programDeepInfoTemplates.law;
+  if (/会计|金融|财务|财经|经济|工商管理/.test(text)) return programDeepInfoTemplates.finance;
+  if (/材料|机械/.test(text)) return programDeepInfoTemplates.material;
+  if (/生物|生命|生态/.test(text)) return programDeepInfoTemplates.biology;
+  return programDeepInfoTemplates.social;
+}
+
+programs.forEach((program) => {
+  Object.assign(program, pickProgramTemplate(program), program);
+});
+
+const majorDeepInfoTemplates = {
+  philosophy: {
+    employment: "教育、研究、出版、公共部门和文化机构。",
+    postgraduate: "读研依赖度较高，适合继续走哲学、宗教学、伦理学和人文社科方向。",
+    fitFor: "适合阅读耐心强、喜欢思辨和写作、不急于快速就业的学生。",
+    studyAdvice: "重点训练阅读、写作、逻辑表达和外语能力，尽早规划读研或公职路线。",
+    difficulty: "中等",
+    difficultyReason: "课程理解门槛不低，就业更看长期积累。"
+  },
+  economy: {
+    employment: "银行、证券、财税、审计、企业经营、数据分析和政府经济部门。",
+    postgraduate: "可走金融、应用经济、会计审计、统计和管理类研究生。",
+    fitFor: "适合数字敏感、愿意考证、沟通能力较好的学生。",
+    studyAdvice: "学好数学统计、会计金融基础，尽早准备证书、实习和数据工具。",
+    difficulty: "中等",
+    difficultyReason: "课程难度适中，但就业竞争和城市资源影响明显。"
+  },
+  law: {
+    employment: "公务员、律所、企业法务、合规、社会服务、公共管理和教育。",
+    postgraduate: "法学可准备法考和法硕，社科类可走公共管理、社会学、教育等方向。",
+    fitFor: "适合阅读量大、表达清楚、逻辑强、愿意背诵和写作的学生。",
+    studyAdvice: "重视案例、写作、演讲、实习和资格考试，提前判断考公、法考或教师路线。",
+    difficulty: "中等",
+    difficultyReason: "入门不算难，但高质量出口依赖证书和长期训练。"
+  },
+  education: {
+    employment: "教师、教研、教育产品、培训管理和公共部门。",
+    postgraduate: "可走教育学、学科教学、心理学、课程与教学论等方向。",
+    fitFor: "适合表达稳定、有耐心、愿意长期面对课堂和学生的学生。",
+    studyAdvice: "准备普通话、教师资格、试讲、实习和目标地区教师招聘要求。",
+    difficulty: "中等",
+    difficultyReason: "专业课程压力适中，但编制和资格准备需要持续投入。"
+  },
+  literature: {
+    employment: "教师、编辑、媒体、新媒体运营、品牌传播、翻译和公共部门。",
+    postgraduate: "可走汉语言文学、新闻传播、翻译、教育和公共管理等方向。",
+    fitFor: "适合阅读写作强、表达欲强、愿意积累作品和实习的学生。",
+    studyAdvice: "多写作品、做实习、练表达，外语类建议叠加行业技能。",
+    difficulty: "中等",
+    difficultyReason: "课程压力不算最高，但就业分化取决于作品和实习。"
+  },
+  science: {
+    employment: "科研、教师、数据分析、检测、环保、半导体、光电和工程技术。",
+    postgraduate: "升学依赖度较高，可走数学、物理、化学、生物、地理等细分方向。",
+    fitFor: "适合理科基础扎实、能接受抽象理论和实验训练的学生。",
+    studyAdvice: "重视数学、实验、科研训练和编程工具，尽早判断读研方向。",
+    difficulty: "较高",
+    difficultyReason: "基础课和抽象理论较多，本科出口常依赖深造或复合技能。"
+  },
+  engineering: {
+    employment: "制造业、软件、通信、电网、自动化、新能源、土木建筑和工程技术岗位。",
+    postgraduate: "可走电子信息、控制、机械、材料、计算机、土木等工程硕士方向。",
+    fitFor: "适合数学物理基础好、愿意动手实践和做项目的学生。",
+    studyAdvice: "打好工程基础，尽早做项目、竞赛、实习和软件工具训练。",
+    difficulty: "较高",
+    difficultyReason: "课程硬、实验项目多，理论和实践都要跟上。"
+  },
+  medicine: {
+    employment: "医院、药企、护理、公共卫生、医学检验、康复和医学技术岗位。",
+    postgraduate: "临床、口腔、中医等方向升学和规培强相关，药学护理也可通过深造拓宽选择。",
+    fitFor: "适合自律强、抗压好、能接受长期学习和职业资格要求的学生。",
+    studyAdvice: "重视基础医学、临床实践、资格考试、考研和规培路线。",
+    difficulty: "很高",
+    difficultyReason: "培养周期长、课程密集，职业准入要求高。"
+  },
+  agriculture: {
+    employment: "农业技术、食品、园林、生态环保、科研推广和公共机构。",
+    postgraduate: "可走农学、食品、园艺、兽医、生态和生物相关方向。",
+    fitFor: "适合喜欢生命科学、实验和应用技术，能接受行业周期的学生。",
+    studyAdvice: "重视实验、实习基地、科研训练和行业证书，关注地域产业资源。",
+    difficulty: "中等",
+    difficultyReason: "课程难度适中，发展空间更依赖方向选择和实践。"
+  },
+  management: {
+    employment: "企业管理、人力、市场、会计、物流、旅游、公共管理和信息管理岗位。",
+    postgraduate: "可走管理学、会计审计、公共管理、工商管理、图情等方向。",
+    fitFor: "适合沟通协调好、愿意实习、能接受岗位竞争的学生。",
+    studyAdvice: "尽早做实习、证书、数据工具和项目管理训练，避免只停留在课堂理论。",
+    difficulty: "中等",
+    difficultyReason: "课程门槛不算高，但就业质量取决于实习、证书和城市资源。"
+  },
+  art: {
+    employment: "设计、媒体、影视、音乐、美术教育、展陈、产品和数字内容。",
+    postgraduate: "可走艺术设计、戏剧影视、美术、音乐、艺术管理和教育方向。",
+    fitFor: "适合有作品积累、审美表达强、能接受项目制训练的学生。",
+    studyAdvice: "持续打磨作品集、软件能力、实习项目和行业人脉，关注招生类型要求。",
+    difficulty: "中等",
+    difficultyReason: "文化课之外更看作品、审美、软件和项目经验。"
+  }
+};
+
+function pickMajorTemplate(major) {
+  const text = `${major.discipline}${major.name}${major.examples.join("")}`;
+  if (/哲学/.test(text)) return majorDeepInfoTemplates.philosophy;
+  if (/经济|财政|金融|贸易/.test(text)) return majorDeepInfoTemplates.economy;
+  if (/法学|政治|社会|民族|公安|马克思/.test(text)) return majorDeepInfoTemplates.law;
+  if (/教育|体育/.test(text)) return majorDeepInfoTemplates.education;
+  if (/文学|语言|新闻|传播|外语|中国语言/.test(text)) return majorDeepInfoTemplates.literature;
+  if (/数学|物理|化学|天文|地理|大气|海洋|地球|生物|心理|统计/.test(text)) return majorDeepInfoTemplates.science;
+  if (/工学|力学|机械|电气|电子|计算机|土木|水利|测绘|化工|地质|矿业|交通|海洋工程|航空|兵器|核工程|农业工程|林业工程|环境|生物医学|食品|建筑|安全|材料|能源|自动化/.test(text)) return majorDeepInfoTemplates.engineering;
+  if (/农学|植物|动物|林学|水产|草学/.test(text)) return majorDeepInfoTemplates.agriculture;
+  if (/医学|临床|口腔|中医|药学|护理|公共卫生|医学技术/.test(text)) return majorDeepInfoTemplates.medicine;
+  if (/管理|工商|会计|物流|旅游|公共管理|图书|电子商务|工业工程/.test(text)) return majorDeepInfoTemplates.management;
+  if (/艺术|设计|音乐|美术|戏剧|影视|舞蹈/.test(text)) return majorDeepInfoTemplates.art;
+  return majorDeepInfoTemplates.management;
+}
+
+majorProfiles.forEach((major) => {
+  Object.assign(major, pickMajorTemplate(major), major);
+});
+
 const pricing = [
   {
     "name": "基础版",
@@ -2008,6 +2238,7 @@ const pricing = [
       "完整冲稳保名单",
       "选科可报检查",
       "基础风险等级",
+      "就业方向和学习难度摘要",
       "收藏并加入志愿表",
       "院校专业组基础详情"
     ],
@@ -2024,6 +2255,8 @@ const pricing = [
       "推荐理由和排序说明",
       "替代院校建议",
       "专业组深度风险",
+      "考研升学、适合人群和大学四年学习建议",
+      "转专业可行性与校内提升路径",
       "家长版解释报告",
       "导出/打印与多次模拟"
     ],
