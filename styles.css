@@ -980,10 +980,13 @@ th {
   text-align: center;
 }
 
+.mobile-app-home,
 .mobile-home,
 .mobile-page-header,
 .mobile-bottom-nav,
-.school-detail-view {
+.school-detail-view,
+.school-mobile-list,
+.school-list-summary {
   display: none;
 }
 
@@ -1618,5 +1621,313 @@ th {
   body[data-mobile-tab="account"] #data {
     border-radius: 14px;
     box-shadow: 0 10px 26px rgba(15, 37, 58, 0.08);
+  }
+
+  body[data-mobile-tab="home"]:not(.school-detail-active) #mobileAppHome {
+    display: block !important;
+    width: min(100% - 24px, 520px);
+    margin: 12px auto 18px;
+  }
+
+  body[data-mobile-tab="home"]:not(.school-detail-active) #home {
+    display: none !important;
+  }
+
+  .mobile-app-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .mobile-app-top div {
+    display: grid;
+    gap: 2px;
+  }
+
+  .mobile-app-top span {
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 13px;
+  }
+
+  .mobile-app-top strong {
+    color: var(--ink);
+    font-size: 20px;
+  }
+
+  .mobile-app-top button {
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--primary);
+    font-weight: 900;
+  }
+
+  .mobile-hero-card,
+  .mobile-profile-card,
+  .mobile-viewpoint-card {
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 12px 28px rgba(15, 37, 58, 0.08);
+  }
+
+  .mobile-hero-card {
+    background: linear-gradient(180deg, #17324d 0%, #24496b 100%);
+    color: #fff;
+  }
+
+  .mobile-eyebrow {
+    margin: 0 0 8px;
+    color: #f5c16f;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .mobile-hero-card h1 {
+    margin: 0 0 8px;
+    text-align: left;
+    font-size: 32px;
+    line-height: 1.12;
+  }
+
+  .mobile-hero-card > p:not(.mobile-eyebrow) {
+    margin-bottom: 14px;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.65;
+  }
+
+  .mobile-quick-form {
+    display: grid;
+    gap: 10px;
+  }
+
+  .mobile-form-row {
+    display: grid;
+    gap: 10px;
+  }
+
+  .mobile-form-row.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mobile-form-row label {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .mobile-form-row input,
+  .mobile-form-row select {
+    margin-top: 6px;
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--ink);
+  }
+
+  .mobile-profile-card {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .mobile-profile-card span {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .mobile-profile-card strong {
+    display: block;
+    margin-top: 4px;
+    color: var(--primary);
+    font-size: 20px;
+  }
+
+  .mobile-profile-card p {
+    margin: 4px 0 0;
+    color: var(--muted);
+  }
+
+  .mobile-profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .mobile-profile-stats span {
+    padding: 10px;
+    border-radius: 10px;
+    background: #f4f6f8;
+    text-align: center;
+  }
+
+  .mobile-profile-stats strong {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .mobile-tool-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .mobile-tool-grid button {
+    display: grid;
+    gap: 5px;
+    min-height: 78px;
+    padding: 12px 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--ink);
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(15, 37, 58, 0.06);
+  }
+
+  .mobile-tool-grid strong {
+    font-size: 15px;
+  }
+
+  .mobile-tool-grid span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .mobile-viewpoint-card {
+    margin-top: 12px;
+  }
+
+  .mobile-viewpoint-card span {
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 13px;
+  }
+
+  .mobile-viewpoint-card h2 {
+    margin: 8px 0;
+    font-size: 22px;
+  }
+
+  .mobile-viewpoint-card p {
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  #schools .table-wrap {
+    display: none;
+  }
+
+  .school-list-summary {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #f6f1e7;
+    color: var(--primary-dark);
+  }
+
+  .school-list-summary span {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .school-mobile-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .school-mobile-card {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 10px 22px rgba(15, 37, 58, 0.07);
+  }
+
+  .school-mobile-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .school-mobile-top strong,
+  .school-mobile-top span {
+    display: block;
+  }
+
+  .school-mobile-top strong {
+    color: var(--ink);
+    font-size: 19px;
+  }
+
+  .school-mobile-top div > span {
+    margin-top: 5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .school-mobile-tags,
+  .school-mobile-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .school-mobile-ranks {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .school-mobile-ranks div {
+    padding: 10px;
+    border-radius: 10px;
+    background: #f7fafb;
+  }
+
+  .school-mobile-ranks span,
+  .school-mobile-ranks strong {
+    display: block;
+  }
+
+  .school-mobile-ranks span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .school-mobile-ranks strong {
+    margin-top: 4px;
+    color: var(--primary);
+    font-size: 15px;
+  }
+
+  .school-mobile-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .school-mobile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .school-mobile-actions button {
+    width: 100%;
   }
 }

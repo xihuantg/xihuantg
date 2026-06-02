@@ -180,6 +180,26 @@ function renderPreviewMetrics(eligible, counts) {
   `;
 }
 
+function renderMobileHomeSummary() {
+  const target = $("#mobileProfileCard");
+  if (!target) return;
+  const profile = getProfile();
+  const eligible = state.recommendations.filter((item) => item.eligible);
+  const counts = countRisks(eligible);
+  target.innerHTML = `
+    <div>
+      <span>当前考生档案</span>
+      <strong>河南 · ${profile.primary} + ${profile.secondary.join(" + ")}</strong>
+      <p>${profile.score}分 · ${profile.rank}位 · ${profile.batch}</p>
+    </div>
+    <div class="mobile-profile-stats">
+      <span><strong>${eligible.length}</strong>可报</span>
+      <span><strong>${counts["稳"] || 0}</strong>稳妥</span>
+      <span><strong>${counts["保"] || 0}</strong>保底</span>
+    </div>
+  `;
+}
+
 function countRisks(items) {
   return items.reduce((acc, item) => {
     acc[item.risk] = (acc[item.risk] || 0) + 1;
@@ -250,6 +270,46 @@ function renderSchools() {
       </tr>
     `;
   }).join("");
+  const summary = $("#schoolListSummary");
+  if (summary) {
+    summary.innerHTML = `<strong>当前筛出 ${rows.length} 个专业组</strong><span>按你的选科和筛选条件展示，可点详情看官网、环境和录取趋势。</span>`;
+  }
+  const mobileList = $("#schoolMobileList");
+  if (mobileList) {
+    mobileList.innerHTML = rows.map((item) => renderSchoolMobileCard(item, matchesSubjects(item, profile))).join("");
+    if (!rows.length) {
+      mobileList.innerHTML = `<p class="muted">当前筛选条件下没有院校专业组，换个层次或状态试试。</p>`;
+    }
+  }
+}
+
+function renderSchoolMobileCard(item, stillEligible) {
+  return `
+    <article class="school-mobile-card">
+      <div class="school-mobile-top">
+        <div>
+          <strong>${item.school}</strong>
+          <span>${item.group} · ${item.city} · ${item.level}</span>
+        </div>
+        <span class="risk-tag ${item.risk}">${item.risk}</span>
+      </div>
+      <div class="school-mobile-tags">
+        <span class="subject-tag">${subjectText(item)}</span>
+        <span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "可报" : "不可报"}</span>
+      </div>
+      <div class="school-mobile-ranks">
+        <div><span>近三年分数</span><strong>${item.scores.join(" / ")}</strong></div>
+        <div><span>近三年位次</span><strong>${item.ranks.join(" / ")}</strong></div>
+        <div><span>计划变化</span><strong>${item.plan}人 ${item.planChange}</strong></div>
+      </div>
+      <p>${item.majors.slice(0, 3).join("、")} · ${item.tuition} · 热度${item.heat}</p>
+      <p class="muted">${stillEligible ? item.note : `你的选科不满足 ${subjectText(item)}，正式填报前应排除。`}</p>
+      <div class="school-mobile-actions">
+        <button class="secondary-btn" data-school-detail="${item.id}" type="button">查看详情</button>
+        <button class="primary-btn" data-school-add="${item.id}" type="button">加入志愿表</button>
+      </div>
+    </article>
+  `;
 }
 
 function majorMatches(profile, major) {
@@ -517,6 +577,38 @@ function showToast(message) {
   showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2400);
 }
 
+function syncMobileFormFromMain() {
+  const pairs = [
+    ["primarySubject", "mobilePrimarySubject"],
+    ["secondSubjectA", "mobileSecondSubjectA"],
+    ["secondSubjectB", "mobileSecondSubjectB"],
+    ["score", "mobileScore"],
+    ["rank", "mobileRank"],
+    ["batch", "mobileBatch"]
+  ];
+  pairs.forEach(([mainId, mobileId]) => {
+    const main = $(`#${mainId}`);
+    const mobile = $(`#${mobileId}`);
+    if (main && mobile) mobile.value = main.value;
+  });
+}
+
+function syncMainFormFromMobile() {
+  const pairs = [
+    ["mobilePrimarySubject", "primarySubject"],
+    ["mobileSecondSubjectA", "secondSubjectA"],
+    ["mobileSecondSubjectB", "secondSubjectB"],
+    ["mobileScore", "score"],
+    ["mobileRank", "rank"],
+    ["mobileBatch", "batch"]
+  ];
+  pairs.forEach(([mobileId, mainId]) => {
+    const mobile = $(`#${mobileId}`);
+    const main = $(`#${mainId}`);
+    if (main && mobile) main.value = mobile.value;
+  });
+}
+
 function refreshAll() {
   updateProfileSummary();
   createRecommendations();
@@ -525,6 +617,8 @@ function refreshAll() {
   renderSchools();
   renderMajors();
   renderVolunteers();
+  renderMobileHomeSummary();
+  syncMobileFormFromMain();
   $("#schoolCount").textContent = programs.length;
 }
 
@@ -538,6 +632,18 @@ function initEvents() {
     refreshAll();
     showToast("已按河南3+1+2选科和位次重新生成方案");
     if (isMobileViewport()) openMobileTab("recommend");
+  });
+
+  $("#mobileQuickForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    syncMainFormFromMobile();
+    if ($("#secondSubjectA").value === $("#secondSubjectB").value) {
+      showToast("两门再选科目不能相同，请重新选择");
+      return;
+    }
+    refreshAll();
+    showToast("已生成智能推荐");
+    openMobileTab("recommend");
   });
 
   ["primarySubject", "secondSubjectA", "secondSubjectB", "score", "rank", "batch", "majorPreference", "cityPreference"].forEach((id) => {
@@ -581,6 +687,7 @@ function initEvents() {
     showToast("已模拟解锁完整方案");
   });
   $("#loginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和会员订单"));
+  $("#mobileLoginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和会员订单"));
   $("#exportBtn").addEventListener("click", exportCsv);
   $("#reportBtn").addEventListener("click", () => {
     if (!state.member) {

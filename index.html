@@ -29,6 +29,55 @@
     </header>
 
     <main>
+
+      <section class="mobile-app-home" id="mobileAppHome" data-mobile-tab="home">
+        <div class="mobile-app-top">
+          <div>
+            <span>???</span>
+            <strong>?? 3+1+2 ????</strong>
+          </div>
+          <button type="button" id="mobileLoginBtn">??</button>
+        </div>
+
+        <div class="mobile-hero-card">
+          <p class="mobile-eyebrow">?????????????</p>
+          <h1>?????????</h1>
+          <p>????????????????????????</p>
+          <form class="mobile-quick-form" id="mobileQuickForm">
+            <div class="mobile-form-row two">
+              <label>????<select id="mobilePrimarySubject"><option>??</option><option>??</option></select></label>
+              <label>??<select id="mobileBatch"><option>???</option><option>???</option><option>???</option></select></label>
+            </div>
+            <div class="mobile-form-row two">
+              <label>???<select id="mobileSecondSubjectA"><option>??</option><option>??</option><option>????</option><option>??</option></select></label>
+              <label>???<select id="mobileSecondSubjectB"><option>??</option><option>??</option><option>????</option><option>??</option></select></label>
+            </div>
+            <div class="mobile-form-row two">
+              <label>????<input id="mobileScore" type="number" value="612" /></label>
+              <label>????<input id="mobileRank" type="number" value="28500" /></label>
+            </div>
+            <button class="primary-btn full" type="submit">??????</button>
+          </form>
+        </div>
+
+        <div class="mobile-profile-card" id="mobileProfileCard"></div>
+
+        <div class="mobile-tool-grid">
+          <button type="button" onclick="openMobileTab('recommend')"><strong>????</strong><span>?????</span></button>
+          <button type="button" onclick="openMobileTab('diagnosis')"><strong>????</strong><span>??????</span></button>
+          <button type="button" onclick="openMobileTab('schools')"><strong>???</strong><span>????</span></button>
+          <button type="button" onclick="openMajorDirectory()"><strong>????</strong><span>93 ????</span></button>
+          <button type="button" onclick="openMobileTab('account')"><strong>????</strong><span>?????</span></button>
+          <button type="button" onclick="openMobileTab('account')"><strong>????</strong><span>????</span></button>
+        </div>
+
+        <div class="mobile-viewpoint-card">
+          <span>?????</span>
+          <h2>?????????????</h2>
+          <p>????????????????????????????????????????????????????????????</p>
+        </div>
+      </section>
+
       <section class="mobile-home" id="mobileHome">
         <div class="mobile-home-hero">
           <div class="section-kicker">河南新高考 · 移动版</div>
@@ -404,6 +453,8 @@
             </select>
           </div>
         </div>
+        <div class="school-list-summary" id="schoolListSummary"></div>
+        <div class="school-mobile-list" id="schoolMobileList"></div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -516,8 +567,8 @@
     <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="&#25163;&#26426;&#24213;&#37096;&#23548;&#33322;">
       <button class="active" type="button" data-mobile-tab-target="home" onclick="openMobileTab('home')"><strong>&#39318;&#39029;</strong><span>&#27979;&#19968;&#27979;</span></button>
       <button type="button" data-mobile-tab-target="recommend" onclick="openMobileTab('recommend')"><strong>&#25512;&#33616;</strong><span>&#20914;&#31283;&#20445;</span></button>
-      <button type="button" data-mobile-tab-target="diagnosis" onclick="openMobileTab('diagnosis')"><strong>&#35786;&#26029;</strong><span>&#26597;&#39118;&#38505;</span></button>
       <button type="button" data-mobile-tab-target="schools" onclick="openMobileTab('schools')"><strong>&#38498;&#26657;</strong><span>&#26597;&#19987;&#19994;</span></button>
+      <button type="button" data-mobile-tab-target="diagnosis" onclick="openMobileTab('diagnosis')"><strong>&#35786;&#26029;</strong><span>&#26597;&#39118;&#38505;</span></button>
       <button type="button" data-mobile-tab-target="account" onclick="openMobileTab('account')"><strong>&#25105;&#30340;</strong><span>&#25253;&#21578;</span></button>
     </nav>
 
