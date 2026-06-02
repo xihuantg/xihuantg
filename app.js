@@ -6,6 +6,10 @@ let state = {
   mobileTab: "home",
   detailReturnTab: "recommend",
   activeDetailId: null,
+  assessment: {
+    answers: {},
+    result: null
+  },
   recommendations: [],
   volunteers: []
 };
@@ -75,6 +79,153 @@ function majorSearchText(major) {
     major.difficulty,
     major.difficultyReason
   ].join("");
+}
+
+function assessmentKeywordScore(text, profileKeys = []) {
+  return profileKeys.reduce((score, keyword) => score + (text.includes(keyword) ? 1 : 0), 0);
+}
+
+function getAssessmentResult() {
+  return state.assessment.result;
+}
+
+function calculateAssessment() {
+  const answers = state.assessment.answers;
+  if (Object.keys(answers).length < assessmentQuestions.length) return null;
+  const scores = { research: 0, practice: 0, service: 0, stable: 0 };
+  assessmentQuestions.forEach((question) => {
+    const option = question.options[answers[question.id]];
+    if (!option) return;
+    option.tags.forEach((tag) => {
+      scores[tag] = (scores[tag] || 0) + 1;
+    });
+  });
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const primaryKey = sorted[0][0];
+  const secondaryKey = sorted[1][0];
+  const primary = assessmentProfiles[primaryKey];
+  const secondary = assessmentProfiles[secondaryKey];
+  const keywords = Array.from(new Set([...primary.keywords, ...secondary.keywords]));
+  const majorMatchesList = majorProfiles
+    .map((major) => ({
+      major,
+      score: assessmentKeywordScore(`${major.name}${major.examples.join("")}${major.employment}${major.fitFor}`, keywords)
+    }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6)
+    .map((item) => item.major);
+  const programMatches = state.recommendations
+    .filter((program) => program.eligible)
+    .map((program) => ({
+      program,
+      score: assessmentKeywordScore(`${program.group}${program.majors.join("")}${program.employmentOutlook}${program.fitProfile}`, keywords) + Math.round(program.chance / 20)
+    }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || b.program.chance - a.program.chance)
+    .slice(0, state.member ? 6 : 3)
+    .map((item) => item.program);
+  return { scores, primaryKey, secondaryKey, primary, secondary, keywords, majorMatches: majorMatchesList, programMatches };
+}
+
+function renderAssessmentQuestions() {
+  const target = $("#assessmentQuestions");
+  if (!target) return;
+  target.innerHTML = assessmentQuestions.map((question, index) => `
+    <article class="assessment-question">
+      <div class="assessment-question-head">
+        <span>${String(index + 1).padStart(2, "0")}</span>
+        <strong>${question.title}</strong>
+      </div>
+      <div class="assessment-options">
+        ${question.options.map((option, optionIndex) => `
+          <button class="${state.assessment.answers[question.id] === optionIndex ? "active" : ""}" type="button" data-assessment-question="${question.id}" data-assessment-option="${optionIndex}">
+            ${option.text}
+          </button>
+        `).join("")}
+      </div>
+    </article>
+  `).join("");
+  renderAssessmentProgress();
+}
+
+function renderAssessmentProgress() {
+  const target = $("#assessmentProgress");
+  if (!target) return;
+  const done = Object.keys(state.assessment.answers).length;
+  target.textContent = done >= assessmentQuestions.length ? "已完成，可生成报告" : `已选择 ${done}/${assessmentQuestions.length} 题`;
+}
+
+function renderAssessmentResult() {
+  const target = $("#assessmentResult");
+  if (!target) return;
+  const result = getAssessmentResult();
+  if (!result) {
+    target.innerHTML = `
+      <div class="assessment-empty">
+        <strong>完成选择后，这里会生成你的AI测评画像</strong>
+        <p>测评会结合当前选科、位次和可报专业组，给出适合方向、学习建议和院校专业组推荐。</p>
+      </div>
+    `;
+    renderReportAssessment();
+    return;
+  }
+  const majorItems = result.majorMatches.slice(0, state.member ? 6 : 3).map((major) => `
+    <li><strong>${major.name}</strong><span>${major.examples.slice(0, 3).join("、")}</span></li>
+  `).join("");
+  const programItems = result.programMatches.map((program) => `
+    <article class="assessment-match-card">
+      <strong>${program.school}</strong>
+      <span>${program.group} · ${program.risk} · ${program.chance}%</span>
+      <p>${program.fitProfile}</p>
+      <button class="secondary-btn" type="button" data-detail="${program.id}">查看详情</button>
+    </article>
+  `).join("");
+  target.innerHTML = `
+    <div class="assessment-profile-card">
+      <span class="badge">AI生成画像</span>
+      <h3>${result.primary.name} + ${result.secondary.name}</h3>
+      <p>${result.primary.summary}</p>
+      <p><strong>适合环境：</strong>${result.primary.fit}</p>
+      <p><strong>需要避开的坑：</strong>${state.member ? result.primary.avoid : "进阶版解锁不适合方向和完整风险解释。"}</p>
+      <p><strong>大学怎么学：</strong>${state.member ? result.primary.studyAdvice : "进阶版解锁大学四年学习建议。"}</p>
+    </div>
+    <div class="assessment-result-grid">
+      <article>
+        <h4>适合专业方向</h4>
+        <ul>${majorItems}</ul>
+        ${state.member ? "" : `<p class="locked-line">基础版/进阶版可查看更多适合方向、难度和就业摘要。</p>`}
+      </article>
+      <article>
+        <h4>匹配院校专业组</h4>
+        <div class="assessment-match-grid">${programItems || "<p class='muted'>当前选科和位次下暂未匹配到明显适合项，可调整选科或专业偏好后再看。</p>"}</div>
+      </article>
+    </div>
+  `;
+  renderReportAssessment();
+}
+
+function renderReportAssessment() {
+  const title = $("#reportAssessmentTitle");
+  const text = $("#reportAssessmentText");
+  if (!title || !text) return;
+  const result = getAssessmentResult();
+  if (!result) {
+    title.textContent = "尚未测评";
+    text.textContent = "完成性格测评后，报告会补充适合专业、学习建议和院校专业组匹配提示。";
+    return;
+  }
+  title.textContent = `${result.primary.name} + ${result.secondary.name}`;
+  const majors = result.majorMatches.slice(0, 3).map((major) => major.name).join("、");
+  text.textContent = `更适合关注 ${majors || result.primary.directions.slice(0, 3).join("、")} 等方向；${state.member ? result.primary.studyAdvice : "进阶版可查看完整学习建议和院校专业组匹配理由。"}`;
+}
+
+function assessmentMatchLine(item) {
+  const result = getAssessmentResult();
+  if (!result) return "";
+  const score = assessmentKeywordScore(`${item.group}${item.majors.join("")}${item.fitProfile || ""}${item.employmentOutlook || ""}`, result.keywords);
+  if (!score) return "";
+  return `<p class="assessment-match-line"><strong>测评匹配：</strong>${result.primary.name}画像与你的 ${item.majors.slice(0, 2).join("、")} 方向有匹配点。</p>`;
 }
 
 function matchesSubjects(item, profile) {
@@ -173,6 +324,7 @@ function renderRecommendations() {
         <p><strong>适合画像：</strong>${item.fitProfile || "适合人群待补充"}；<strong>学习强度：</strong>${item.difficultyReason || "难度说明待补充"}</p>
         <p><strong>学校环境公开评价摘要：</strong>${state.member ? item.environment.replace("公开评价摘要：", "") : "进阶版解锁后查看校园环境、宿舍、食堂、交通等公开评价摘要。"}</p>
         <p>${state.member || !locked ? item.reason : "进阶版查看排序理由、风险解释和替代方案。"}</p>
+        ${assessmentMatchLine(item)}
         ${locked ? "" : paidProgramDetail(item)}
         <div class="action-row">
           <button type="button" data-detail="${item.id}">&#26597;&#30475;&#35814;&#24773;</button>
@@ -287,6 +439,12 @@ function renderRisks() {
   if ((tags.filter((tag) => tag === "冲").length || 0) > state.volunteers.length / 2) risks.push("冲刺项占比偏高，滑档风险会增加。");
   if (state.volunteers.filter((item) => item.heat === "极高").length >= 2) risks.push("热门专业组较集中，建议搭配中热度专业降低不确定性。");
   if (profile.primary === "物理" && !profile.secondary.includes("化学") && state.volunteers.some((item) => /医学|材料|生物/.test(item.group))) risks.push("医学、材料、生物方向常见化学要求，请重点核对再选科。");
+  const assessment = getAssessmentResult();
+  if (assessment && profile.majorPreference !== "不限专业") {
+    const prefText = profile.majorPreference;
+    const matched = assessment.keywords.some((keyword) => prefText.includes(keyword)) || assessment.primary.directions.some((keyword) => prefText.includes(keyword));
+    if (!matched) risks.push(`你的专业偏好与${assessment.primary.name}测评画像匹配度不高，建议家长和考生再讨论兴趣、学习强度和就业路径。`);
+  }
   if (!risks.length) risks.push("当前志愿梯度较均衡，仍需以考试院和高校招生章程为准。");
   $("#riskList").innerHTML = risks.map((risk) => `<li>${risk}</li>`).join("");
 }
@@ -586,6 +744,7 @@ function renderReport() {
     <div class="steady"><strong>稳妥</strong><p>${counts["稳"] || 0} 个志愿</p></div>
     <div class="safe"><strong>保底</strong><p>${counts["保"] || 0} 个志愿</p></div>
   `;
+  renderReportAssessment();
 }
 
 function updateProfileSummary() {
@@ -689,6 +848,8 @@ function refreshAll() {
   renderMajors();
   renderVolunteers();
   renderMobileHomeSummary();
+  if (state.assessment.result) state.assessment.result = calculateAssessment();
+  renderAssessmentResult();
   syncMobileFormFromMain();
   $("#schoolCount").textContent = programs.length;
 }
@@ -738,6 +899,10 @@ function initEvents() {
     if (target.dataset.add) addVolunteer(target.dataset.add);
     if (target.dataset.schoolAdd) addVolunteer(target.dataset.schoolAdd);
     if (target.dataset.fav) showToast("已收藏，可在真实版本接入账号收藏夹");
+    if (target.dataset.assessmentQuestion) {
+      state.assessment.answers[target.dataset.assessmentQuestion] = Number(target.dataset.assessmentOption);
+      renderAssessmentQuestions();
+    }
     if (Object.prototype.hasOwnProperty.call(target.dataset, "up")) moveVolunteer(Number(target.dataset.up), Number(target.dataset.up) - 1);
     if (Object.prototype.hasOwnProperty.call(target.dataset, "down")) moveVolunteer(Number(target.dataset.down), Number(target.dataset.down) + 1);
     if (Object.prototype.hasOwnProperty.call(target.dataset, "remove")) removeVolunteer(Number(target.dataset.remove));
@@ -780,6 +945,28 @@ function initEvents() {
     renderVolunteers();
     showToast("已清空志愿表");
   });
+  $("#generateAssessmentBtn").addEventListener("click", () => {
+    const result = calculateAssessment();
+    if (!result) {
+      showToast("请先完成全部10道测评题");
+      renderAssessmentProgress();
+      return;
+    }
+    state.assessment.result = result;
+    renderAssessmentResult();
+    renderRecommendations();
+    renderReport();
+    showToast("已生成AI性格与专业适配报告");
+  });
+  $("#resetAssessmentBtn").addEventListener("click", () => {
+    state.assessment.answers = {};
+    state.assessment.result = null;
+    renderAssessmentQuestions();
+    renderAssessmentResult();
+    renderRecommendations();
+    renderReport();
+    showToast("已重置测评");
+  });
   $("#schoolLevelFilter").addEventListener("change", renderSchools);
   $("#eligibilityFilter").addEventListener("change", renderSchools);
   $("#majorSearch").addEventListener("input", renderMajors);
@@ -814,6 +1001,8 @@ function init() {
   createRecommendations();
   state.volunteers = state.recommendations.filter((item) => item.eligible).slice(0, 3);
   renderPricing();
+  renderAssessmentQuestions();
+  renderAssessmentResult();
   refreshAll();
   initEvents();
   openMobileTab(isMobileViewport() ? "home" : "home", false);

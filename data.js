@@ -2228,6 +2228,138 @@ majorProfiles.forEach((major) => {
   Object.assign(major, pickMajorTemplate(major), major);
 });
 
+const assessmentQuestions = [
+  {
+    id: "learn",
+    title: "你平时更喜欢哪种学习方式？",
+    options: [
+      { text: "自己查资料、推公式、把逻辑想明白", tags: ["research"] },
+      { text: "做实验、搭东西、边做边改", tags: ["practice"] },
+      { text: "听别人讲、讨论之后再总结", tags: ["service"] }
+    ]
+  },
+  {
+    id: "pressure",
+    title: "遇到压力大的任务，你通常怎么处理？",
+    options: [
+      { text: "拆成步骤，按计划一点点推进", tags: ["stable"] },
+      { text: "先抓关键问题，快速试错", tags: ["practice"] },
+      { text: "找资料和案例，把依据补足", tags: ["research"] }
+    ]
+  },
+  {
+    id: "expression",
+    title: "你更愿意做哪类任务？",
+    options: [
+      { text: "写作、演讲、沟通、组织活动", tags: ["service"] },
+      { text: "数据分析、模型推理、做判断", tags: ["research"] },
+      { text: "工具操作、项目执行、技术实现", tags: ["practice"] }
+    ]
+  },
+  {
+    id: "math",
+    title: "你对数学、物理、逻辑类课程的感觉是？",
+    options: [
+      { text: "比较有优势，愿意继续学难一点", tags: ["research", "practice"] },
+      { text: "能学，但希望和应用结合", tags: ["practice", "stable"] },
+      { text: "不想把它作为大学主战场", tags: ["service", "stable"] }
+    ]
+  },
+  {
+    id: "hands",
+    title: "你对动手实践、实验、项目的接受度？",
+    options: [
+      { text: "喜欢，有成果感", tags: ["practice"] },
+      { text: "可以接受，但要有清晰指导", tags: ["stable"] },
+      { text: "更喜欢文字、沟通或分析类任务", tags: ["service", "research"] }
+    ]
+  },
+  {
+    id: "future",
+    title: "你更想要哪种未来职业状态？",
+    options: [
+      { text: "技术路线，靠能力和项目吃饭", tags: ["practice", "research"] },
+      { text: "稳定路线，证书、编制、规则清楚", tags: ["stable"] },
+      { text: "沟通服务路线，和人打交道更多", tags: ["service"] }
+    ]
+  },
+  {
+    id: "longStudy",
+    title: "如果一个方向需要长期学习或读研，你能接受吗？",
+    options: [
+      { text: "能接受，愿意用深造换更高平台", tags: ["research"] },
+      { text: "看专业值不值得，最好就业读研都能走", tags: ["practice", "stable"] },
+      { text: "更希望本科阶段就有清晰出口", tags: ["stable", "service"] }
+    ]
+  },
+  {
+    id: "city",
+    title: "你对城市和实习资源怎么看？",
+    options: [
+      { text: "很重要，想去机会多的城市", tags: ["practice", "service"] },
+      { text: "可以兼顾，学校和专业更重要", tags: ["research"] },
+      { text: "离家近、生活稳定也很重要", tags: ["stable"] }
+    ]
+  },
+  {
+    id: "risk",
+    title: "面对热门专业竞争，你更倾向？",
+    options: [
+      { text: "愿意冲，但要知道风险", tags: ["practice"] },
+      { text: "稳一点，把保底和专业质量排好", tags: ["stable"] },
+      { text: "先看是否适合自己，再决定冲不冲", tags: ["research", "service"] }
+    ]
+  },
+  {
+    id: "family",
+    title: "你希望志愿方案怎么和家里沟通？",
+    options: [
+      { text: "用数据和理由说清楚", tags: ["research"] },
+      { text: "把就业、稳定性和成本讲清楚", tags: ["stable"] },
+      { text: "把兴趣、性格和未来生活讲清楚", tags: ["service"] }
+    ]
+  }
+];
+
+const assessmentProfiles = {
+  research: {
+    name: "研究分析型",
+    summary: "适合用数据、逻辑和长期积累做选择，专业上更看重平台、深造和技术壁垒。",
+    fit: "适合科研、算法、数据、医学、法学、经济分析等需要持续学习的方向。",
+    avoid: "不太适合只靠短期兴趣、缺少长期训练路径的选择。",
+    studyAdvice: "大学阶段要重点做阅读、数学/统计、科研训练、论文或项目沉淀。",
+    directions: ["计算机", "人工智能", "医学", "法学", "经济", "数学", "数据"],
+    keywords: ["计算机", "软件", "人工智能", "数据", "医学", "法学", "经济", "数学", "统计"]
+  },
+  practice: {
+    name: "工程实践型",
+    summary: "适合边做边学、用项目证明能力，专业上更适合工程、技术和产业落地类方向。",
+    fit: "适合计算机、电气、自动化、机械、电子信息、智能制造等项目型专业。",
+    avoid: "不太适合长期只有理论阅读、实践反馈较少的方向。",
+    studyAdvice: "大学阶段要尽早做项目、竞赛、实习，形成可展示的作品和技术能力。",
+    directions: ["计算机", "电气", "自动化", "电子信息", "机械", "智能制造"],
+    keywords: ["计算机", "软件", "人工智能", "电气", "自动化", "电子", "通信", "机械", "机器人"]
+  },
+  service: {
+    name: "表达服务型",
+    summary: "适合通过沟通、表达、组织和服务创造价值，专业上更看重人文理解和表达能力。",
+    fit: "适合师范、法学、新闻传播、汉语言、公共管理、教育和社会服务类方向。",
+    avoid: "不太适合长期封闭刷题、很少与人协作沟通的方向。",
+    studyAdvice: "大学阶段要重视写作、演讲、实习、资格证和真实沟通场景训练。",
+    directions: ["师范", "法学", "新闻传播", "汉语言", "教育", "公共管理"],
+    keywords: ["师范", "教育", "法学", "新闻", "传播", "汉语言", "公共管理", "社会"]
+  },
+  stable: {
+    name: "稳定规划型",
+    summary: "适合规则清楚、路径稳定、能通过证书和长期准备获得确定性的方向。",
+    fit: "适合师范、财经、会计、医学技术、电气、公共管理和本地就业资源较清楚的专业。",
+    avoid: "不太适合波动很大、完全依赖个人资源和短期机会的方向。",
+    studyAdvice: "大学阶段要提前规划证书、考公考编、考研和实习节点，把路径拆成时间表。",
+    directions: ["师范", "财经", "会计", "电气", "医学技术", "公共管理"],
+    keywords: ["师范", "会计", "金融", "财务", "电气", "医学", "公共管理", "管理"]
+  }
+};
+
 const pricing = [
   {
     "name": "基础版",
