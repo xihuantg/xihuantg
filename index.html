@@ -29,6 +29,30 @@
     </header>
 
     <main>
+      <section class="mobile-home" id="mobileHome">
+        <div class="mobile-home-hero">
+          <div class="section-kicker">河南新高考 · 移动版</div>
+          <h1>看清风险，再填志愿</h1>
+          <p>先生成基础方案，再进入不同板块查看推荐、诊断、报告和专业目录。</p>
+          <button class="primary-btn" type="button" data-mobile-open="home" data-title="生成志愿方案">生成志愿方案</button>
+        </div>
+        <div class="mobile-entry-grid" aria-label="功能入口">
+          <button type="button" data-mobile-open="recommend" data-title="智能推荐"><strong>智能推荐</strong><span>查看冲稳保结果</span></button>
+          <button type="button" data-mobile-open="volunteer" data-title="志愿诊断"><strong>志愿诊断</strong><span>检查滑档和保底</span></button>
+          <button type="button" data-mobile-open="report" data-title="报告预览"><strong>报告预览</strong><span>看家庭版报告</span></button>
+          <button type="button" data-mobile-open="schools" data-title="院校专业组"><strong>院校专业组</strong><span>查选科可报</span></button>
+          <button type="button" data-mobile-directory><strong>专业目录</strong><span>查 93 个专业类</span></button>
+          <button type="button" data-mobile-open="why-pay" data-title="付费价值"><strong>付费价值</strong><span>看解锁后多什么</span></button>
+          <button type="button" data-mobile-open="pricing" data-title="会员权益"><strong>会员权益</strong><span>查看套餐</span></button>
+          <button type="button" data-mobile-open="environment" data-title="环境评价"><strong>环境评价</strong><span>看公开摘要</span></button>
+        </div>
+      </section>
+
+      <div class="mobile-page-header" id="mobilePageHeader">
+        <button class="ghost-btn" id="mobileBackBtn" type="button">← 返回首页</button>
+        <strong id="mobilePageTitle">功能页面</strong>
+      </div>
+
       <section class="hero" id="home">
         <div class="hero-main">
           <div class="hero-copy">
@@ -195,7 +219,7 @@
         <span>河南从2022年秋季入学高一学生开始实行高考综合改革，2025年起首届新高考按“3+1+2”模式录取。本演示数据用于产品样板，正式收费前需替换为真实可核验数据。</span>
       </section>
 
-      <section class="section-card shanhe" id="why-pay">
+      <section class="section-card shanhe" id="why-pay" data-mobile-page="why-pay">
         <div class="section-head">
           <div>
             <div class="section-kicker">山河四省家庭场景</div>
@@ -272,7 +296,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="recommend">
+      <section class="section-card" id="recommend" data-mobile-page="recommend">
         <div class="section-head">
           <div>
             <div class="section-kicker">智能推荐</div>
@@ -291,7 +315,7 @@
         <div class="recommend-grid" id="recommendGrid"></div>
       </section>
 
-      <section class="section-card split" id="volunteer">
+      <section class="section-card split" id="volunteer" data-mobile-page="volunteer">
         <div>
           <div class="section-head compact">
             <div>
@@ -330,7 +354,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="report">
+      <section class="section-card" id="report" data-mobile-page="report">
         <div class="section-head">
           <div>
             <div class="section-kicker">会员报告预览</div>
@@ -359,7 +383,7 @@
         <div class="gradient-chart" id="gradientChart" aria-label="志愿梯度图"></div>
       </section>
 
-      <section class="section-card" id="schools">
+      <section class="section-card" id="schools" data-mobile-page="schools">
         <div class="section-head">
           <div>
             <div class="section-kicker">院校专业组库</div>
@@ -399,7 +423,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="majors">
+      <section class="section-card" id="majors" data-mobile-page="majors">
         <div class="section-head">
           <div>
             <div class="section-kicker">专业适配</div>
@@ -418,7 +442,7 @@
         <div class="major-grid" id="majorGrid"></div>
       </section>
 
-      <section class="section-card" id="pricing">
+      <section class="section-card" id="pricing" data-mobile-page="pricing">
         <div class="section-head">
           <div>
             <div class="section-kicker">会员权益</div>
@@ -458,7 +482,7 @@
         </div>
       </section>
 
-      <section class="section-card" id="environment">
+      <section class="section-card" id="environment" data-mobile-page="environment">
         <div class="section-head">
           <div>
             <div class="section-kicker">公开信息整理</div>

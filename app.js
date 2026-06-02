@@ -681,6 +681,35 @@ function closeMajorDirectory() {
   window.location.hash = "majors";
 }
 
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 720px)").matches;
+}
+
+function openMobilePage(pageId, title) {
+  if (!isMobileViewport()) {
+    if (pageId === "home") {
+      window.location.hash = "home";
+    } else {
+      window.location.hash = pageId;
+    }
+    return;
+  }
+  document.body.classList.add("mobile-page-active");
+  document.querySelectorAll("[data-mobile-page], #home").forEach((section) => {
+    section.classList.remove("mobile-current");
+  });
+  const target = pageId === "home" ? $("#home") : document.querySelector(`[data-mobile-page="${pageId}"]`);
+  if (target) target.classList.add("mobile-current");
+  $("#mobilePageTitle").textContent = title;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function closeMobilePage() {
+  document.body.classList.remove("mobile-page-active");
+  document.querySelectorAll(".mobile-current").forEach((section) => section.classList.remove("mobile-current"));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function renderPricing() {
   $("#pricingGrid").innerHTML = pricing.map((plan) => `
     <article class="price-card ${plan.featured ? "featured" : ""}">
@@ -789,6 +818,7 @@ function initEvents() {
     }
     refreshAll();
     showToast("已按河南3+1+2选科和位次重新生成方案");
+    if (isMobileViewport()) openMobilePage("recommend", "智能推荐");
   });
 
   ["primarySubject", "secondSubjectA", "secondSubjectB", "score", "rank", "batch", "majorPreference", "cityPreference"].forEach((id) => {
@@ -850,9 +880,17 @@ function initEvents() {
   $("#backToPlannerBtn").addEventListener("click", closeMajorDirectory);
   $("#majorDirectorySearch").addEventListener("input", renderMajorDirectory);
   $("#disciplineFilter").addEventListener("change", renderMajorDirectory);
+  $("#mobileBackBtn").addEventListener("click", closeMobilePage);
+  document.querySelectorAll("[data-mobile-open]").forEach((button) => {
+    button.addEventListener("click", () => openMobilePage(button.dataset.mobileOpen, button.dataset.title));
+  });
+  document.querySelectorAll("[data-mobile-directory]").forEach((button) => {
+    button.addEventListener("click", openMajorDirectory);
+  });
   document.querySelectorAll(".nav a, .brand").forEach((link) => {
     link.addEventListener("click", () => {
       document.body.classList.remove("directory-mode");
+      if (isMobileViewport()) closeMobilePage();
     });
   });
 }
