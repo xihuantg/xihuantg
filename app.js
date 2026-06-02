@@ -368,22 +368,56 @@ function openSchoolDetail(id, returnTab = state.mobileTab || "recommend") {
   if (!item) return;
   state.activeDetailId = id;
   state.detailReturnTab = returnTab;
+  const avgRank = average(item.ranks);
+  const rankDiff = getProfile().rank - avgRank;
+  const rankMessage = item.eligible
+    ? rankDiff <= -8000
+      ? "你的位次明显优于近三年均值，可作为保底或偏稳选择，但仍需看专业热度。"
+      : rankDiff <= 5000
+        ? "你的位次与近三年区间接近，适合作为稳妥或轻冲选择。"
+        : "你的位次弱于近三年均值，属于冲刺项，需要搭配足够保底。"
+    : "当前选科不满足该专业组要求，正式填报前应排除或换组。";
+  const trendRows = item.scores.map((score, index) => `
+    <div>
+      <strong>${2023 + index}</strong>
+      <span>${score}分</span>
+      <span>${item.ranks[index]}位</span>
+    </div>
+  `).join("");
   $("#schoolDetailRisk").textContent = item.risk || "详情";
   $("#schoolDetailName").textContent = item.school;
   $("#schoolDetailMeta").textContent = `${item.group} · ${item.city} · ${item.level} · ${item.batch}`;
   $("#schoolWebsiteLink").href = item.website || "#";
   $("#schoolWebsiteLink").textContent = item.website ? "进入学校官网" : "官网待补充";
-  $("#schoolIntroText").textContent = item.schoolIntro || item.note || "学校简介待补充，正式上线前请替换为真实可核验信息。";
+  $("#schoolIntroText").innerHTML = `
+    <strong>${item.school}</strong> 当前样板展示的是面向河南考生的专业组档案。${item.schoolIntro || item.note || "学校简介待补充，正式上线前请替换为真实可核验信息。"}
+    <br><br>
+    <span>城市：${item.city} · 层次：${item.level} · 批次：${item.batch}</span>
+  `;
   $("#schoolAdmissionTitle").textContent = `${item.scores.join(" / ")} 分`;
-  $("#schoolAdmissionText").textContent = `${item.admissionSummary || ""} 近三年位次：${item.ranks.join(" / ")}；计划：${item.plan}人 ${item.planChange}`;
+  $("#schoolAdmissionText").innerHTML = `
+    <div class="admission-trend">${trendRows}</div>
+    <p>${item.admissionSummary || ""}</p>
+    <p>近三年平均位次约 ${avgRank}；招生计划 ${item.plan} 人，计划变化 ${item.planChange}。</p>
+    <p><strong>当前判断：</strong>${rankMessage}</p>
+  `;
   $("#schoolSubjectText").textContent = subjectText(item);
-  $("#schoolMajorText").textContent = `${item.majors.join("、")} · ${item.tuition} · 热度${item.heat}`;
-  $("#schoolEnvironmentText").textContent = state.member ? item.environment : "免费版展示基础信息；解锁后查看完整校园环境、宿舍、食堂、交通等公开评价摘要。";
-  $("#schoolSourceText").textContent = state.member ? `${item.source} ${item.officialNote || ""}` : "完整来源和风险说明为会员报告权益。";
+  $("#schoolMajorText").innerHTML = `
+    <p><strong>包含专业：</strong>${item.majors.join("、")}</p>
+    <p><strong>学费与热度：</strong>${item.tuition} · 热度${item.heat}</p>
+    <p><strong>选科匹配：</strong>${item.eligible ? "当前选科可报。" : "当前选科不可报，需要更换专业组或核对招生章程。"}</p>
+    <p><strong>专业提醒：</strong>${item.note}</p>
+  `;
+  $("#schoolEnvironmentText").innerHTML = state.member
+    ? `<p>${item.environment}</p><ul>${(item.reviewHighlights || []).map((text) => `<li>${text}</li>`).join("")}</ul>`
+    : `<p>免费版展示基础信息；解锁后查看完整校园环境、宿舍、食堂、交通等公开评价摘要。</p><ul><li>校园氛围、宿舍食堂、交通通勤会影响四年体验。</li><li>同一学校不同校区差异较大，正式填报前需要核验校区。</li></ul>`;
+  $("#schoolSourceText").innerHTML = state.member
+    ? `${item.source}<br>${item.officialNote || "最终以考试院和高校官方信息为准。"}`
+    : "完整来源和风险说明为会员报告权益；正式上线前所有摘要需替换为真实可核验来源。";
   $("#schoolPhotoGrid").innerHTML = (item.photos || []).slice(0, 3).map((photo, index) => `
     <div class="school-photo-card">
-      <span>校园环境照片</span>
-      <small>样板图 ${index + 1} · ${photo}</small>
+      <span>${["校门/主楼", "宿舍/生活区", "食堂/校园路"][index] || "校园环境"}</span>
+      <small>正式版替换真实照片 · ${photo}</small>
     </div>
   `).join("");
   document.body.classList.add("school-detail-active");

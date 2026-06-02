@@ -1080,6 +1080,50 @@ th {
   background: #fff;
 }
 
+.school-detail-grid p {
+  margin: 8px 0 0;
+  line-height: 1.75;
+}
+
+.school-detail-grid ul {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.admission-trend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.admission-trend div {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.admission-trend strong,
+.admission-trend span {
+  display: block;
+}
+
+.admission-trend strong {
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.admission-trend span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .school-detail-grid a {
   color: var(--primary);
 }
