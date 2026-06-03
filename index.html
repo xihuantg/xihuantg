@@ -398,9 +398,9 @@
       <section class="section-card" id="recommend" data-mobile-page="recommend" data-mobile-tab="recommend">
         <div class="section-head">
           <div>
-            <div class="section-kicker">可报候选测算</div>
-            <h2>先核验选科，再看冲稳保候选</h2>
-            <p class="muted">以下结果基于模拟数据和历史位次逻辑生成，仅作为志愿填报参考。实际录取结果会受到招生计划、报考人数、专业热度、政策变化等因素影响。</p>
+            <div class="section-kicker">智能推荐</div>
+            <h2>先筛选科，再看冲稳保</h2>
+            <p class="muted">模拟数据仅供参考，正式填报以考试院和高校为准。</p>
           </div>
           <div class="segmented" role="tablist" aria-label="候选类别">
             <button class="active" data-filter="all" type="button">全部</button>
@@ -509,10 +509,18 @@
       <section class="section-card" id="schools" data-mobile-page="schools" data-mobile-tab="schools">
         <div class="section-head">
           <div>
-            <div class="section-kicker">院校专业组样板库</div>
-            <h2>河南招生专业组与选科要求核验</h2>
+            <div class="section-kicker">金榜专业组</div>
+            <h2>院校优先，一眼看清冲稳保</h2>
           </div>
-          <div class="filter-row">
+          <div class="school-mode-toggle" aria-label="排序偏好">
+            <button class="active" data-school-mode="school" type="button">院校优先</button>
+            <button data-school-mode="major" type="button">专业优先</button>
+          </div>
+        </div>
+        <div class="school-ranking-board">
+          <div class="school-profile-ribbon" id="schoolProfileRibbon"></div>
+          <div class="school-risk-buckets" id="schoolRiskBuckets" aria-label="院校风险分桶"></div>
+          <div class="filter-row school-filter-row">
             <select id="schoolLevelFilter">
               <option value="all">全部层次</option>
               <option>985</option>
@@ -526,25 +534,8 @@
               <option value="ineligible">只看不可报</option>
             </select>
           </div>
-        </div>
-        <div class="school-list-summary" id="schoolListSummary"></div>
-        <div class="school-mobile-list" id="schoolMobileList"></div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>院校/专业组</th>
-                <th>城市</th>
-                <th>层次</th>
-                <th>选科要求</th>
-                <th>河南近三年位次</th>
-                <th>就业/难度</th>
-                <th>状态</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="schoolTable"></tbody>
-          </table>
+          <div class="school-list-summary" id="schoolListSummary"></div>
+          <div class="golden-school-list" id="schoolList"></div>
         </div>
       </section>
 

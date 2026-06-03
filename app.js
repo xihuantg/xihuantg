@@ -3,6 +3,8 @@
 let state = {
   member: false,
   activeFilter: "all",
+  schoolRiskFilter: "all",
+  schoolMode: "school",
   mobileTab: "home",
   detailReturnTab: "recommend",
   activeDetailId: null,
@@ -468,6 +470,8 @@ function renderInsights() {
   const eligible = state.recommendations.filter((item) => item.eligible);
   const blocked = state.recommendations.length - eligible.length;
   const counts = countRisks(eligible);
+  const allCounts = countRisks(state.recommendations);
+  renderRecommendationFilterCounts(allCounts);
   $("#matchInsight").innerHTML = `
     <div><strong>${eligible.length}</strong><span>选科可报专业组</span></div>
     <div><strong>${blocked}</strong><span>选科不匹配</span></div>
@@ -475,6 +479,23 @@ function renderInsights() {
     <div><strong>${counts["保"] || 0}</strong><span>保底候选</span></div>
   `;
   renderPreviewMetrics(eligible, counts);
+}
+
+function renderRecommendationFilterCounts(counts) {
+  const totals = {
+    all: state.recommendations.length,
+    "冲": counts["冲"] || 0,
+    "稳": counts["稳"] || 0,
+    "保": counts["保"] || 0,
+    "不可报": counts["不可报"] || 0
+  };
+  document.querySelectorAll(".segmented button").forEach((button) => {
+    const key = button.dataset.filter;
+    const label = key === "all" ? "全部" : key;
+    const total = totals[key] || 0;
+    button.innerHTML = `<span>${label}</span><strong class="filter-count">${total}</strong>`;
+    button.setAttribute("aria-label", `${label} ${total}`);
+  });
 }
 
 function renderPreviewMetrics(eligible, counts) {
@@ -528,6 +549,10 @@ function countRisks(items) {
     acc[item.risk] = (acc[item.risk] || 0) + 1;
     return acc;
   }, {});
+}
+
+function formatRank(value) {
+  return Number(value || 0).toLocaleString("zh-CN");
 }
 
 function renderVolunteers() {
@@ -586,71 +611,112 @@ function renderSchools() {
   const eligibility = $("#eligibilityFilter").value;
   const profile = getProfile();
   const rule = getBatchRule(profile.batch);
-  const rows = state.recommendations.filter((item) => {
+  const baseRows = state.recommendations.filter((item) => {
     const levelOk = level === "all" || item.level === level;
     const eligibleOk = eligibility === "all" || (eligibility === "eligible" ? item.eligible : !item.eligible);
     return levelOk && eligibleOk;
   });
-  $("#schoolTable").innerHTML = rows.map((item) => {
-    const stillEligible = matchesSubjects(item, profile);
-    return `
-      <tr>
-        <td><strong>${item.school}</strong><br><span class="muted">${item.group} · ${item.batch}</span></td>
-        <td>${item.city}</td>
-        <td>${item.level}</td>
-        <td>${subjectText(item)}</td>
-        <td>${item.ranks.join(" / ")}</td>
-        <td>${item.employmentOutlook}<br><span class="muted">难度：${item.difficulty} · ${item.transferDifficulty}转专业</span></td>
-        <td><span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "可报" : "不可报"}</span></td>
-        <td><button class="secondary-btn" data-school-detail="${item.id}" type="button">&#35814;&#24773;</button> <button class="secondary-btn" data-school-add="${item.id}" type="button">加入</button></td>
-      </tr>
+  const rows = state.schoolRiskFilter === "all" ? baseRows : baseRows.filter((item) => item.risk === state.schoolRiskFilter);
+  const counts = countRisks(baseRows);
+  const ribbon = $("#schoolProfileRibbon");
+  if (ribbon) {
+    ribbon.innerHTML = `
+      <div>
+        <span>当前档案</span>
+        <strong>河南 ${profile.primary}/${profile.secondary.join("/")} ${profile.score}分</strong>
+      </div>
+      <div>
+        <span>位次</span>
+        <strong>${formatRank(profile.rank)}位</strong>
+      </div>
+      <div>
+        <span>批次</span>
+        <strong>${profile.batch}</strong>
+      </div>
+      <div>
+        <span>排序偏好</span>
+        <strong>${state.schoolMode === "major" ? "专业优先" : "院校优先"}</strong>
+      </div>
     `;
-  }).join("");
+  }
+  const buckets = $("#schoolRiskBuckets");
+  if (buckets) {
+    const riskTabs = [
+      ["all", "全部", baseRows.length],
+      ["冲", "冲刺", counts["冲"] || 0],
+      ["稳", "稳妥", counts["稳"] || 0],
+      ["保", "保底", counts["保"] || 0],
+      ["不可报", "不可报", counts["不可报"] || 0]
+    ];
+    buckets.innerHTML = riskTabs.map(([key, label, count]) => `
+      <button class="${state.schoolRiskFilter === key ? "active" : ""}" data-school-risk="${key}" type="button">
+        <strong>${label}</strong><span>${count}</span>
+      </button>
+    `).join("");
+  }
   const summary = $("#schoolListSummary");
   if (summary) {
-    summary.innerHTML = `<strong>当前筛出 ${rows.length} 个样板专业组</strong><span>按你的选科和筛选条件展示，可点详情看官网、环境和录取趋势。</span><span>${batchRuleShortText(rule)}</span>`;
+    const riskText = state.schoolRiskFilter === "all" ? "全部梯度" : `${state.schoolRiskFilter}类梯度`;
+    summary.innerHTML = `<strong>当前筛出 ${rows.length} 个专业组 · ${riskText}</strong><span>按你的选科、层次和可报状态展示，先看冲稳保，再点详情复核官网、环境和录取趋势。</span><span>${batchRuleShortText(rule)}</span>`;
   }
-  const mobileList = $("#schoolMobileList");
-  if (mobileList) {
-    mobileList.innerHTML = rows.map((item) => renderSchoolMobileCard(item, matchesSubjects(item, profile), profile)).join("");
+  const schoolList = $("#schoolList");
+  if (schoolList) {
+    schoolList.innerHTML = rows.map((item) => renderGoldenSchoolCard(item, matchesSubjects(item, profile), profile)).join("");
     if (!rows.length) {
-      mobileList.innerHTML = `<p class="muted">当前筛选条件下没有院校专业组，换个层次或状态试试。</p>`;
+      schoolList.innerHTML = `<p class="muted empty-school-state">当前筛选条件下没有院校专业组，换个层次、状态或冲稳保分桶试试。</p>`;
     }
   }
+  document.querySelectorAll("[data-school-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.schoolMode === state.schoolMode);
+  });
 }
 
-function renderSchoolMobileCard(item, stillEligible, profile) {
+function renderGoldenSchoolCard(item, stillEligible, profile) {
+  const latestScore = item.scores[0] || "--";
+  const latestRank = item.ranks[0] ? formatRank(item.ranks[0]) : "--";
+  const previousScore = item.scores[1] || "--";
+  const previousRank = item.ranks[1] ? formatRank(item.ranks[1]) : "--";
+  const controlLine = `${profile.batch}规则核验`;
+  const environmentText = state.member ? item.environment.replace("公开评价摘要：", "") : "解锁后查看校园环境、宿舍食堂、交通和公开评价来源。";
   return `
-    <article class="school-mobile-card">
-      <div class="school-mobile-top">
+    <article class="golden-school-card">
+      <div class="golden-school-top">
+        <div class="school-seal" aria-hidden="true">${item.school.slice(0, 1)}</div>
         <div>
-          <strong>${item.school}</strong>
-          <span>${item.group} · ${item.city} · ${item.level}</span>
+          <h3>${item.school}【${item.group}】</h3>
+          <p>${item.province} ${item.city} · ${item.level} · ${item.batch}</p>
         </div>
+        <button class="major-drop-btn" data-school-detail="${item.id}" type="button">招生专业 ▾</button>
+      </div>
+      <div class="golden-school-status">
         <span class="risk-tag ${item.risk}">${item.risk}</span>
-      </div>
-      <div class="school-mobile-tags">
+        <span class="school-chance">概率 ${item.chance}%</span>
+        <span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "选科可报" : "选科不匹配"}</span>
         <span class="subject-tag">${subjectText(item)}</span>
-        <span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "可报" : "不可报"}</span>
       </div>
-      <div class="school-mobile-ranks">
-        <div><span>录取机会参考</span><strong>${item.chance}%</strong></div>
-        <div><span>学校代码</span><strong>${item.schoolCode || "待补充"}</strong></div>
-        <div><span>2025计划</span><strong>${item.plan}人 ${item.planChange}</strong></div>
-        <div><span>选科要求</span><strong>${subjectText(item)}</strong></div>
+      <div class="school-data-board">
+        <div><span>年份</span><strong>2025</strong><strong>2024</strong></div>
+        <div><span>学校代码</span><strong>${item.schoolCode || "待补充"}</strong><strong>${item.level}</strong></div>
+        <div><span>计划数</span><strong>${item.plan}人</strong><strong>${item.planChange}</strong></div>
+        <div><span>最低分</span><strong>${latestScore}分</strong><strong>${previousScore}分</strong></div>
+        <div><span>最低位次</span><strong>${latestRank}</strong><strong>${previousRank}</strong></div>
+        <div><span>省控线</span><strong>${controlLine}</strong><strong>以考试院为准</strong></div>
       </div>
       <div class="rank-compare-note">${rankComparisonText(item, profile)}</div>
       ${renderAdmissionComparison(item, profile)}
-      <p>${item.majors.slice(0, 3).join("、")} · ${item.tuition} · 热度${item.heat}</p>
+      <p class="school-major-line">${item.majors.slice(0, 4).join("、")} · ${item.tuition} · 热度${item.heat}</p>
       ${programDeepSummary(item)}
       <div class="school-mobile-deep">
         <p><strong>考研升学：</strong>${item.postgraduatePath}</p>
         <p><strong>转专业：</strong>${item.transferDifficulty} · ${state.member ? item.transferPolicy : "进阶版查看具体限制和校内路径"}</p>
       </div>
       <p class="muted">${stillEligible ? item.note : `你的选科不满足 ${subjectText(item)}，正式填报前应排除。`}</p>
-      <div class="school-mobile-actions">
-        <button class="secondary-btn" data-school-detail="${item.id}" type="button">查看详情</button>
-        <button class="primary-btn" data-school-add="${item.id}" type="button">加入候选清单</button>
+      <p class="muted">${environmentText}</p>
+      <div class="golden-school-actions">
+        <button class="secondary-btn" data-school-detail="${item.id}" type="button">可报专业</button>
+        <button class="secondary-btn" data-school-detail="${item.id}" type="button">报考要求</button>
+        <button class="secondary-btn" data-school-detail="${item.id}" type="button">录取分析</button>
+        <button class="primary-btn" data-school-add="${item.id}" type="button">+ 候选</button>
       </div>
     </article>
   `;
@@ -1032,7 +1098,9 @@ function initEvents() {
   });
 
   document.addEventListener("click", (event) => {
-    const target = event.target;
+    const target = event.target instanceof HTMLElement
+      ? event.target.closest("[data-detail], [data-school-detail], [data-add], [data-school-add], [data-fav], [data-school-risk], [data-school-mode], [data-assessment-question], [data-up], [data-down], [data-remove], [data-plan], [data-mobile-open], [data-mobile-directory]")
+      : null;
     if (!(target instanceof HTMLElement)) return;
     if (target.dataset.detail) openSchoolDetail(target.dataset.detail, "recommend");
     if (target.dataset.schoolDetail) openSchoolDetail(target.dataset.schoolDetail, "schools");
@@ -1043,6 +1111,14 @@ function initEvents() {
       state.assessment.answers[target.dataset.assessmentQuestion] = Number(target.dataset.assessmentOption);
       renderAssessmentQuestions();
     }
+    if (target.dataset.schoolRisk) {
+      state.schoolRiskFilter = target.dataset.schoolRisk;
+      renderSchools();
+    }
+    if (target.dataset.schoolMode) {
+      state.schoolMode = target.dataset.schoolMode;
+      renderSchools();
+    }
     if (Object.prototype.hasOwnProperty.call(target.dataset, "up")) moveVolunteer(Number(target.dataset.up), Number(target.dataset.up) - 1);
     if (Object.prototype.hasOwnProperty.call(target.dataset, "down")) moveVolunteer(Number(target.dataset.down), Number(target.dataset.down) + 1);
     if (Object.prototype.hasOwnProperty.call(target.dataset, "remove")) removeVolunteer(Number(target.dataset.remove));
@@ -1051,7 +1127,7 @@ function initEvents() {
       updateProfileSummary();
       renderRecommendations();
       renderReport();
-    showToast(`已模拟查看${target.dataset.plan}进阶分析`);
+      showToast(`已模拟查看${target.dataset.plan}进阶分析`);
     }
   });
 
