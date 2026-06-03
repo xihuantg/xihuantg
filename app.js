@@ -94,6 +94,19 @@ function renderBatchRulePanels() {
   });
 }
 
+function refreshMobileBatchRulePreview() {
+  const mobileBatch = $("#mobileBatch");
+  const mainBatch = $("#batch");
+  if (!mobileBatch) return;
+  const batch = normalizeBatchName(mobileBatch.value);
+  mobileBatch.value = batch;
+  if (mainBatch) mainBatch.value = batch;
+  const rule = getBatchRule(batch);
+  const ruleTarget = $("#mobileBatchRuleHint");
+  if (ruleTarget) ruleTarget.innerHTML = batchRuleCardHtml(rule);
+  renderMobileHomeSummary();
+}
+
 function difficultyClass(level = "") {
   if (level.includes("很高")) return "hard";
   if (level.includes("较高")) return "medium-hard";
@@ -1006,6 +1019,8 @@ function initEvents() {
   ["primarySubject", "secondSubjectA", "secondSubjectB", "score", "rank", "batch", "majorPreference", "cityPreference"].forEach((id) => {
     $(`#${id}`).addEventListener("change", refreshAll);
   });
+
+  $("#mobileBatch").addEventListener("change", refreshMobileBatchRulePreview);
 
   document.querySelectorAll(".segmented button").forEach((button) => {
     button.addEventListener("click", () => {
