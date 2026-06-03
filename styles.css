@@ -1791,7 +1791,7 @@ th {
   gap: 14px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1000px) and (hover: none) and (pointer: coarse) {
   .hero,
   .split {
     grid-template-columns: 1fr;
@@ -1830,7 +1830,7 @@ th {
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px) and (hover: none) and (pointer: coarse) {
   body {
     background:
       radial-gradient(circle at 16% 4%, rgba(217, 164, 65, 0.18), transparent 17rem),

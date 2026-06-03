@@ -797,8 +797,38 @@ function closeMajorDirectory() {
   window.location.hash = "majors";
 }
 
-function isMobileViewport() {
-  return window.matchMedia("(max-width: 720px)").matches;
+function detectMobileDevice() {
+  const ua = navigator.userAgent || "";
+  const touchPoints = navigator.maxTouchPoints || 0;
+  const hasTouch = touchPoints > 1 || "ontouchstart" in window;
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  const noHover = window.matchMedia("(hover: none)").matches;
+  const mobileUa = /Android|iPhone|iPod|IEMobile|Windows Phone|BlackBerry|Opera Mini|Mobile/i.test(ua);
+  const desktopUa = /Windows NT|Macintosh|X11|CrOS|Linux x86_64/i.test(ua) && !mobileUa;
+  const screenMin = Math.min(window.screen.width || window.innerWidth, window.screen.height || window.innerHeight);
+
+  return !desktopUa && hasTouch && screenMin <= 760 && (mobileUa || (coarse && noHover));
+}
+
+function isMobileDevice() {
+  return Boolean(window.__SITE_DEVICE__?.isMobileDevice ?? detectMobileDevice());
+}
+
+function syncDeviceMode() {
+  const mobile = detectMobileDevice();
+  window.__SITE_DEVICE__ = { isMobileDevice: mobile };
+  document.documentElement.classList.toggle("device-mobile", mobile);
+  document.documentElement.classList.toggle("device-desktop", !mobile);
+  document.body.classList.toggle("device-mobile", mobile);
+  document.body.classList.toggle("device-desktop", !mobile);
+  document.body.dataset.device = mobile ? "mobile" : "desktop";
+
+  if (!mobile) {
+    delete document.body.dataset.mobileTab;
+    document.body.classList.remove("mobile-tab-active", "mobile-page-active");
+    document.querySelectorAll("[data-mobile-tab]").forEach((section) => section.classList.remove("mobile-current"));
+    document.querySelectorAll("[data-mobile-tab-target]").forEach((button) => button.classList.remove("active"));
+  }
 }
 
 function normalizeMobileTab(pageId) {
@@ -810,7 +840,7 @@ function normalizeMobileTab(pageId) {
 }
 
 function openMobileTab(tabId, shouldScroll = true) {
-  if (!isMobileViewport()) {
+  if (!isMobileDevice()) {
     if (tabId === "home") {
       window.location.hash = "home";
     } else {
@@ -1067,7 +1097,7 @@ function initEvents() {
     }
     refreshAll();
     showToast("已按河南3+1+2选科和位次生成候选清单");
-    if (isMobileViewport()) openMobileTab("recommend");
+    if (isMobileDevice()) openMobileTab("recommend");
   });
 
   $("#mobileQuickForm").addEventListener("submit", (event) => {
@@ -1208,12 +1238,16 @@ function initEvents() {
   document.querySelectorAll(".nav a, .brand").forEach((link) => {
     link.addEventListener("click", () => {
       document.body.classList.remove("directory-mode");
-      if (isMobileViewport()) closeMobilePage();
+      if (isMobileDevice()) closeMobilePage();
     });
   });
+
+  window.addEventListener("resize", syncDeviceMode);
+  window.addEventListener("orientationchange", () => window.setTimeout(syncDeviceMode, 120));
 }
 
 function init() {
+  syncDeviceMode();
   populateBatchOptions();
   createRecommendations();
   state.volunteers = state.recommendations.filter((item) => item.eligible).slice(0, 3);
@@ -1222,7 +1256,7 @@ function init() {
   renderAssessmentResult();
   refreshAll();
   initEvents();
-  openMobileTab(isMobileViewport() ? "home" : "home", false);
+  openMobileTab("home", false);
 }
 
 init();
