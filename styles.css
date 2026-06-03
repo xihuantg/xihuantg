@@ -2103,7 +2103,7 @@ th {
 
   .school-mobile-ranks {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
 
@@ -2128,6 +2128,107 @@ th {
     margin-top: 4px;
     color: var(--primary);
     font-size: 15px;
+  }
+
+  .rank-compare-note {
+    padding: 10px 12px;
+    border: 1px solid #dbe8f2;
+    border-radius: 10px;
+    background: #f7fbfd;
+    color: var(--primary-dark);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.55;
+  }
+
+  .admission-compare {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .admission-compare-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-end;
+    padding: 10px;
+    background: #f7fafb;
+  }
+
+  .admission-compare-title strong,
+  .admission-compare-title span {
+    display: block;
+  }
+
+  .admission-compare-title strong {
+    color: var(--ink);
+    font-size: 14px;
+  }
+
+  .admission-compare-title span {
+    color: var(--muted);
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .admission-compare table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .admission-compare th,
+  .admission-compare td {
+    padding: 8px 6px;
+    border-top: 1px solid var(--line);
+    color: var(--primary);
+    font-size: 12px;
+    text-align: left;
+    vertical-align: middle;
+    word-break: keep-all;
+  }
+
+  .admission-compare th {
+    background: #fbf7ed;
+    color: var(--muted);
+    font-weight: 900;
+  }
+
+  .admission-compare td {
+    font-weight: 800;
+  }
+
+  .rank-gap {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .rank-gap.better {
+    background: #e6f4ee;
+    color: var(--green);
+  }
+
+  .rank-gap.close {
+    background: #fff3da;
+    color: #8a5a12;
+  }
+
+  .rank-gap.worse {
+    background: #f8e7e5;
+    color: var(--red);
+  }
+
+  .rank-gap.neutral {
+    background: #eef2f5;
+    color: var(--primary);
   }
 
   .school-mobile-card p {

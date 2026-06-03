@@ -270,6 +270,57 @@ function preferenceBoost(item, profile) {
   return boost;
 }
 
+function formatRankGap(profileRank, historicalRank) {
+  if (!profileRank || !historicalRank) return { text: "待补充", className: "neutral" };
+  const gap = profileRank - historicalRank;
+  const absGap = Math.abs(gap).toLocaleString("zh-CN");
+  if (gap < -1000) return { text: `高 ${absGap} 位`, className: "better" };
+  if (gap > 1000) return { text: `低 ${absGap} 位`, className: "worse" };
+  return { text: `接近 ${absGap} 位`, className: "close" };
+}
+
+function rankComparisonText(item, profile) {
+  const avgRank = average(item.ranks);
+  const gap = formatRankGap(profile.rank, avgRank);
+  const tone = gap.className === "better" ? "当前更偏稳妥或保底。" : gap.className === "worse" ? "当前更偏冲刺，需要谨慎搭配保底。" : "当前与历史区间接近，适合作为稳妥项观察。";
+  return `你的位次比近三年平均最低位次${gap.text}，${tone}`;
+}
+
+function renderAdmissionComparison(item, profile) {
+  const years = [2024, 2023, 2022];
+  return `
+    <div class="admission-compare">
+      <div class="admission-compare-title">
+        <strong>近三年录取情况</strong>
+        <span>位次差按当前考生位次对比</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>年份</th>
+            <th>最低分</th>
+            <th>最低位次</th>
+            <th>位次差</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${years.map((year, index) => {
+            const gap = formatRankGap(profile.rank, item.ranks[index]);
+            return `
+              <tr>
+                <td>${year}</td>
+                <td>${item.scores[index]}</td>
+                <td>${item.ranks[index].toLocaleString("zh-CN")}</td>
+                <td><span class="rank-gap ${gap.className}">${gap.text}</span></td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
 function createRecommendations() {
   const profile = getProfile();
   if (profile.secondary.length < 2) {
@@ -483,14 +534,14 @@ function renderSchools() {
   }
   const mobileList = $("#schoolMobileList");
   if (mobileList) {
-    mobileList.innerHTML = rows.map((item) => renderSchoolMobileCard(item, matchesSubjects(item, profile))).join("");
+    mobileList.innerHTML = rows.map((item) => renderSchoolMobileCard(item, matchesSubjects(item, profile), profile)).join("");
     if (!rows.length) {
       mobileList.innerHTML = `<p class="muted">当前筛选条件下没有院校专业组，换个层次或状态试试。</p>`;
     }
   }
 }
 
-function renderSchoolMobileCard(item, stillEligible) {
+function renderSchoolMobileCard(item, stillEligible, profile) {
   return `
     <article class="school-mobile-card">
       <div class="school-mobile-top">
@@ -507,10 +558,11 @@ function renderSchoolMobileCard(item, stillEligible) {
       <div class="school-mobile-ranks">
         <div><span>录取概率</span><strong>${item.chance}%</strong></div>
         <div><span>学校代码</span><strong>${item.schoolCode || "待补充"}</strong></div>
-        <div><span>近三年分数</span><strong>${item.scores.join(" / ")}</strong></div>
-        <div><span>近三年位次</span><strong>${item.ranks.join(" / ")}</strong></div>
-        <div><span>计划变化</span><strong>${item.plan}人 ${item.planChange}</strong></div>
+        <div><span>2025计划</span><strong>${item.plan}人 ${item.planChange}</strong></div>
+        <div><span>选科要求</span><strong>${subjectText(item)}</strong></div>
       </div>
+      <div class="rank-compare-note">${rankComparisonText(item, profile)}</div>
+      ${renderAdmissionComparison(item, profile)}
       <p>${item.majors.slice(0, 3).join("、")} · ${item.tuition} · 热度${item.heat}</p>
       ${programDeepSummary(item)}
       <div class="school-mobile-deep">
