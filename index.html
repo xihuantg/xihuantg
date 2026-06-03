@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>豫志通 - 看清风险，再填志愿</title>
-    <link rel="stylesheet" href="styles.css?v=16" />
+    <link rel="stylesheet" href="styles.css?v=17" />
   </head>
   <body>
     <header class="topbar">
@@ -47,7 +47,7 @@
           <form class="mobile-quick-form" id="mobileQuickForm">
             <div class="mobile-form-row two">
               <label>&#39318;&#36873;&#31185;&#30446;<select id="mobilePrimarySubject"><option>&#29289;&#29702;</option><option>&#21382;&#21490;</option></select></label>
-              <label>&#25209;&#27425;<select id="mobileBatch"><option>&#26412;&#31185;&#25209;</option><option>&#25552;&#21069;&#25209;</option><option>&#19987;&#31185;&#25209;</option></select></label>
+              <label>&#25209;&#27425;<select id="mobileBatch"><option>普通本科批</option><option>普通本科提前批</option><option>普通高职（专科）提前批</option><option>普通高职（专科）批</option><option>艺术本科提前批</option><option>艺术本科批</option><option>艺术高职（专科）批</option><option>体育本科批</option><option>体育高职（专科）批</option></select></label>
             </div>
             <div class="mobile-form-row two">
               <label>&#20877;&#36873;&#19968;<select id="mobileSecondSubjectA"><option>&#21270;&#23398;</option><option>&#29983;&#29289;</option><option>&#24605;&#24819;&#25919;&#27835;</option><option>&#22320;&#29702;</option></select></label>
@@ -59,6 +59,7 @@
             </div>
             <button class="primary-btn full" type="submit">&#31435;&#21363;&#29983;&#25104;&#25512;&#33616;</button>
           </form>
+          <div id="mobileBatchRuleHint"></div>
         </div>
 
         <div class="mobile-profile-card" id="mobileProfileCard"></div>
@@ -170,9 +171,15 @@
                 <label>
                   批次
                   <select id="batch">
-                    <option>本科批</option>
-                    <option>提前批</option>
-                    <option>专科批</option>
+                    <option>普通本科批</option>
+                    <option>普通本科提前批</option>
+                    <option>普通高职（专科）提前批</option>
+                    <option>普通高职（专科）批</option>
+                    <option>艺术本科提前批</option>
+                    <option>艺术本科批</option>
+                    <option>艺术高职（专科）批</option>
+                    <option>体育本科批</option>
+                    <option>体育高职（专科）批</option>
                   </select>
                 </label>
               </div>
@@ -219,6 +226,7 @@
               <button class="primary-btn" type="submit">免费生成我的志愿方案</button>
             </div>
           </form>
+          <div id="batchRuleHint"></div>
         </div>
 
         <aside class="report-preview-panel">
@@ -286,12 +294,12 @@
           <article>
             <span>&#22522;&#30784;&#29256;</span>
             <strong>&#165;29</strong>
-            <p>&#23436;&#25972;&#20914;&#31283;&#20445;&#21517;&#21333;&#12289;&#36873;&#31185;&#21487;&#25253;&#26816;&#26597;&#12289;&#22522;&#30784;&#39118;&#38505;&#31561;&#32423;&#12290;</p>
+            <p>按当前批次规则整理候选清单、选科可报检查、基础风险等级。</p>
           </article>
           <article>
             <span>&#36827;&#38454;&#29256;</span>
             <strong>&#165;59</strong>
-            <p>&#25512;&#33616;&#29702;&#30001;&#12289;&#26367;&#20195;&#38498;&#26657;&#12289;&#23478;&#38271;&#29256;&#25253;&#21578;&#12289;&#23548;&#20986;&#25171;&#21360;&#12290;</p>
+            <p>批次规则解释、推荐理由、替代院校、家长版报告、导出打印。</p>
           </article>
         </div>
 
@@ -439,6 +447,7 @@
         </div>
         <aside class="risk-panel">
           <h3>自动风险检查</h3>
+          <div id="volunteerRuleHint"></div>
           <ul id="riskList"></ul>
           <button class="primary-btn full" id="reportBtn" type="button">打印/导出报告</button>
         </aside>
@@ -466,8 +475,8 @@
         <div class="section-head">
           <div>
             <div class="section-kicker">会员报告预览</div>
-            <h2>河南3+1+2完整报告</h2>
-            <p class="muted">这份报告不是替你做决定，而是帮你少踩坑、少漏项、少凭感觉填。重点看：学校层次、专业方向、志愿梯度、选科限制和保底强度。</p>
+            <h2>河南3+1+2批次规则与候选报告</h2>
+            <p class="muted">这份报告不是替你做决定，也不替代考试院正式填报系统，而是帮你按当前批次规则看清候选清单、志愿单位、调剂规则、选科限制和保底强度。</p>
           </div>
           <span class="badge" id="reportStatus">部分锁定</span>
         </div>
@@ -493,6 +502,7 @@
             <p class="muted" id="reportAssessmentText">完成性格测评后，报告会补充适合专业、学习建议和院校专业组匹配提示。</p>
           </article>
         </div>
+        <div id="reportBatchRule"></div>
         <div class="gradient-chart" id="gradientChart" aria-label="志愿梯度图"></div>
       </section>
 
@@ -733,7 +743,7 @@
       本站提供的院校推荐、专业分析、环境评价和报告内容均为辅助参考，不代表任何院校官方意见，也不保证最终录取结果。考生和家长应结合各省教育考试院、院校招生章程、当年招生计划等官方信息综合判断。
     </footer>
 
-    <script src="data.js?v=16"></script>
-    <script src="app.js?v=16"></script>
+    <script src="data.js?v=17"></script>
+    <script src="app.js?v=17"></script>
   </body>
 </html>

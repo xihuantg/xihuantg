@@ -485,6 +485,33 @@ input[readonly] {
   white-space: nowrap;
 }
 
+.batch-rule-card {
+  display: grid;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #ead7a5;
+  border-radius: 10px;
+  background: #fffaf0;
+  color: var(--primary-dark);
+}
+
+.batch-rule-card strong {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.batch-rule-card p,
+.batch-rule-card small {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.batch-rule-card small {
+  font-size: 12px;
+}
+
 .section-card {
   padding: clamp(18px, 2.5vw, 26px);
 }

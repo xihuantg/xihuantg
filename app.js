@@ -25,7 +25,7 @@ function getProfile() {
     secondary: Array.from(new Set([a, b])),
     score: Number($("#score").value || 0),
     rank: Number($("#rank").value || 0),
-    batch: $("#batch").value,
+    batch: normalizeBatchName($("#batch").value),
     majorPreference: $("#majorPreference").value,
     cityPreference: $("#cityPreference").value
   };
@@ -37,6 +37,61 @@ function average(values) {
 
 function subjectText(item) {
   return `${item.primary} + ${item.secondary.join("+")}`;
+}
+
+function normalizeBatchName(batch) {
+  return batchRules[batch] ? batch : batchAliases[batch] || "普通本科批";
+}
+
+function getBatchRule(batch) {
+  const name = normalizeBatchName(batch || "普通本科批");
+  return {
+    name,
+    ...batchRules[name]
+  };
+}
+
+function batchRuleShortText(rule) {
+  return `${rule.name}：最多${rule.maxVolunteers}个${rule.unit}，${rule.inner}，${rule.adjustment}。`;
+}
+
+function batchRuleLongText(rule) {
+  return `${batchRuleShortText(rule)}${rule.note} ${rule.source}`;
+}
+
+function batchRuleCardHtml(rule) {
+  return `
+    <div class="batch-rule-card">
+      <span class="mini-label">${rule.category} · 河南2026批次规则</span>
+      <strong>${batchRuleShortText(rule)}</strong>
+      <p>${rule.strategy}</p>
+      <small>${rule.note} ${rule.source}</small>
+    </div>
+  `;
+}
+
+function populateBatchOptions() {
+  const options = Object.keys(batchRules);
+  ["batch", "mobileBatch"].forEach((id) => {
+    const select = $(`#${id}`);
+    if (!select) return;
+    const current = normalizeBatchName(select.value);
+    select.innerHTML = options.map((name) => `<option>${name}</option>`).join("");
+    select.value = options.includes(current) ? current : "普通本科批";
+  });
+}
+
+function renderBatchRulePanels() {
+  const rule = getBatchRule(getProfile().batch);
+  [
+    "batchRuleHint",
+    "mobileBatchRuleHint",
+    "volunteerRuleHint",
+    "reportBatchRule"
+  ].forEach((id) => {
+    const target = $(`#${id}`);
+    if (target) target.innerHTML = batchRuleCardHtml(rule);
+  });
 }
 
 function difficultyClass(level = "") {
@@ -412,6 +467,7 @@ function renderInsights() {
 function renderPreviewMetrics(eligible, counts) {
   const target = $("#previewMetrics");
   if (!target) return;
+  const rule = getBatchRule(getProfile().batch);
   target.innerHTML = `
     <div>
       <strong>${eligible.length}</strong>
@@ -426,8 +482,8 @@ function renderPreviewMetrics(eligible, counts) {
       <span>保底候选</span>
     </div>
     <div>
-      <strong>${state.member ? "完整" : "基础"}</strong>
-      <span>报告状态</span>
+      <strong>${rule.maxVolunteers}</strong>
+      <span>${rule.unit}上限</span>
     </div>
   `;
 }
@@ -436,6 +492,7 @@ function renderMobileHomeSummary() {
   const target = $("#mobileProfileCard");
   if (!target) return;
   const profile = getProfile();
+  const rule = getBatchRule(profile.batch);
   const eligible = state.recommendations.filter((item) => item.eligible);
   const counts = countRisks(eligible);
   target.innerHTML = `
@@ -443,6 +500,7 @@ function renderMobileHomeSummary() {
       <span>当前考生档案</span>
       <strong>河南 · ${profile.primary} + ${profile.secondary.join(" + ")}</strong>
       <p>${profile.score}分 · ${profile.rank}位 · ${profile.batch}</p>
+      <p>${rule.maxVolunteers}个${rule.unit} · ${rule.adjustment}</p>
     </div>
     <div class="mobile-profile-stats">
       <span><strong>${eligible.length}</strong>可报</span>
@@ -486,12 +544,18 @@ function renderVolunteers() {
 function renderRisks() {
   const risks = [];
   const profile = getProfile();
+  const rule = getBatchRule(profile.batch);
   const tags = state.volunteers.map((item) => item.risk);
   const ineligible = state.volunteers.filter((item) => !matchesSubjects(item, profile));
+  risks.push(batchRuleLongText(rule));
   if (ineligible.length) risks.push(`有${ineligible.length}个志愿选科不匹配，正式填报前必须移除或替换。`);
-  if (state.volunteers.length < 6) risks.push("志愿数量偏少，建议至少准备6个候选专业组。");
-  if (!tags.includes("保")) risks.push("当前缺少保底专业组，建议加入位次优势更明显的院校。");
-  if ((tags.filter((tag) => tag === "冲").length || 0) > state.volunteers.length / 2) risks.push("冲刺项占比偏高，滑档风险会增加。");
+  if (rule.maxVolunteers === 1) {
+    risks.push(`当前演示已加入${state.volunteers.length}个候选；${rule.name}重点是确认院校、4个专业顺序和是否调剂，不按冲稳保数量填满。`);
+  } else if (state.volunteers.length < 6) {
+    risks.push(`当前演示志愿数偏少：已加入${state.volunteers.length}个候选，官方最多可填${rule.maxVolunteers}个${rule.unit}，建议按冲稳保准备更完整清单。`);
+  }
+  if (rule.maxVolunteers !== 1 && !tags.includes("保")) risks.push("当前缺少保底专业组，建议加入位次优势更明显的院校。");
+  if (rule.maxVolunteers !== 1 && (tags.filter((tag) => tag === "冲").length || 0) > state.volunteers.length / 2) risks.push("冲刺项占比偏高，滑档风险会增加。");
   if (state.volunteers.filter((item) => item.heat === "极高").length >= 2) risks.push("热门专业组较集中，建议搭配中热度专业降低不确定性。");
   if (profile.primary === "物理" && !profile.secondary.includes("化学") && state.volunteers.some((item) => /医学|材料|生物/.test(item.group))) risks.push("医学、材料、生物方向常见化学要求，请重点核对再选科。");
   const assessment = getAssessmentResult();
@@ -508,6 +572,7 @@ function renderSchools() {
   const level = $("#schoolLevelFilter").value;
   const eligibility = $("#eligibilityFilter").value;
   const profile = getProfile();
+  const rule = getBatchRule(profile.batch);
   const rows = state.recommendations.filter((item) => {
     const levelOk = level === "all" || item.level === level;
     const eligibleOk = eligibility === "all" || (eligibility === "eligible" ? item.eligible : !item.eligible);
@@ -530,7 +595,7 @@ function renderSchools() {
   }).join("");
   const summary = $("#schoolListSummary");
   if (summary) {
-    summary.innerHTML = `<strong>当前筛出 ${rows.length} 个专业组</strong><span>按你的选科和筛选条件展示，可点详情看官网、环境和录取趋势。</span>`;
+    summary.innerHTML = `<strong>当前筛出 ${rows.length} 个样板专业组</strong><span>按你的选科和筛选条件展示，可点详情看官网、环境和录取趋势。</span><span>${batchRuleShortText(rule)}</span>`;
   }
   const mobileList = $("#schoolMobileList");
   if (mobileList) {
@@ -791,10 +856,11 @@ function renderPricing() {
 
 function renderReport() {
   const profile = getProfile();
+  const rule = getBatchRule(profile.batch);
   const eligible = state.recommendations.filter((item) => item.eligible);
   const counts = countRisks(state.volunteers);
-  $("#reportProfile").textContent = `${profile.primary} + ${profile.secondary.join(" + ")} / ${profile.rank}位`;
-  $("#reportScope").textContent = state.member ? `${eligible.length}个可报专业组，${state.recommendations.length - eligible.length}个不可报提醒` : "开通基础版后查看全部可报范围";
+  $("#reportProfile").textContent = `${profile.primary} + ${profile.secondary.join(" + ")} / ${profile.rank}位 / ${profile.batch}`;
+  $("#reportScope").textContent = state.member ? `${eligible.length}个样板可报专业组；当前批次最多${rule.maxVolunteers}个${rule.unit}` : `开通基础版后查看按${rule.maxVolunteers}个${rule.unit}规则整理的候选清单`;
   $("#reportGradient").textContent = `冲 ${counts["冲"] || 0} · 稳 ${counts["稳"] || 0} · 保 ${counts["保"] || 0}`;
   $("#reportStatus").textContent = state.member ? "已解锁" : "部分锁定";
   $("#gradientChart").innerHTML = `
@@ -807,7 +873,7 @@ function renderReport() {
 
 function updateProfileSummary() {
   const profile = getProfile();
-  $("#profileSummary").textContent = `河南 · ${profile.primary} + ${profile.secondary.join(" + ")} · ${profile.score}分 · ${profile.rank}位`;
+  $("#profileSummary").textContent = `河南 · ${profile.primary} + ${profile.secondary.join(" + ")} · ${profile.score}分 · ${profile.rank}位 · ${profile.batch}`;
   $("#memberBadge").textContent = state.member ? "高级会员" : "免费预览";
   $("#meterBar").style.width = state.member ? "92%" : "46%";
 }
@@ -820,7 +886,7 @@ function addVolunteer(id) {
     return;
   }
   if (!state.member && state.volunteers.length >= 3) {
-    showToast("免费版最多添加3个志愿，开通会员可生成完整志愿表");
+    showToast("免费版最多添加3个候选，开通会员可按当前批次规则整理完整候选清单");
     return;
   }
   state.volunteers.push(item);
@@ -906,6 +972,7 @@ function refreshAll() {
   renderMajors();
   renderVolunteers();
   renderMobileHomeSummary();
+  renderBatchRulePanels();
   if (state.assessment.result) state.assessment.result = calculateAssessment();
   renderAssessmentResult();
   syncMobileFormFromMain();
@@ -1056,6 +1123,7 @@ function initEvents() {
 }
 
 function init() {
+  populateBatchOptions();
   createRecommendations();
   state.volunteers = state.recommendations.filter((item) => item.eligible).slice(0, 3);
   renderPricing();

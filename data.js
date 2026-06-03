@@ -1,6 +1,105 @@
 // Demo data entry. Replace this file first when adding real schools, majors, scores, websites, and images.
 // Current data is sample-only. Paid production launch requires verified and legally usable data sources.
 
+const batchRules = {
+  "普通本科提前批": {
+    category: "普通类",
+    maxVolunteers: 64,
+    unit: "专业+院校",
+    inner: "1个专业+1所院校为1个志愿",
+    adjustment: "不设专业调剂",
+    strategy: "按专业和院校逐个排序，重点核对类别、体检、政审、面试等资格要求。",
+    note: "军事、公安、公费师范等类别不可兼报；军队招飞另设志愿，限合格考生。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "普通本科批": {
+    category: "普通类",
+    maxVolunteers: 48,
+    unit: "院校专业组",
+    inner: "每个院校专业组内最多填6个专业",
+    adjustment: "可选择是否同意专业调剂",
+    strategy: "先排院校专业组梯度，再在组内按专业意愿排序。",
+    note: "含国家专项、高校专项、地方专项、预科班等限资格考生；高水平运动队单设专业组志愿，限资格考生。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "普通高职（专科）提前批": {
+    category: "普通类",
+    maxVolunteers: 64,
+    unit: "专业+院校",
+    inner: "1个专业+1所院校为1个志愿",
+    adjustment: "不设专业调剂",
+    strategy: "按专业和院校逐个排序，定向军士、医学、航海等类别要先确认资格和限制。",
+    note: "各类别不可兼报。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "普通高职（专科）批": {
+    category: "普通类",
+    maxVolunteers: 48,
+    unit: "院校专业组",
+    inner: "每个院校专业组内最多填6个专业",
+    adjustment: "可选择是否同意专业调剂",
+    strategy: "按院校专业组做冲稳保梯度，组内专业顺序同样会影响录取结果。",
+    note: "专科批也不能只看学校名，要核对专业组、学费、办学地点和就业路径。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "艺术本科提前批": {
+    category: "艺术类",
+    maxVolunteers: 1,
+    unit: "院校志愿",
+    inner: "1个院校志愿内设4个专业志愿",
+    adjustment: "可选择是否同意专业调剂",
+    strategy: "先确认艺术类别、专业成绩和院校规则，再决定院校与专业顺序。",
+    note: "该批次不是64个专业+院校，需单独提醒。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "艺术本科批": {
+    category: "艺术类",
+    maxVolunteers: 64,
+    unit: "专业+院校",
+    inner: "1个专业+1所院校为1个志愿",
+    adjustment: "不设专业调剂",
+    strategy: "按专业方向、综合成绩规则和院校层次逐个排序。",
+    note: "艺术类不同专业类别规则差异较大，需核对当年招生章程。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "艺术高职（专科）批": {
+    category: "艺术类",
+    maxVolunteers: 64,
+    unit: "专业+院校",
+    inner: "1个专业+1所院校为1个志愿",
+    adjustment: "不设专业调剂",
+    strategy: "按专业方向、院校位置、学费和就业实训条件排序。",
+    note: "艺术类不同专业类别规则差异较大，需核对当年招生章程。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "体育本科批": {
+    category: "体育类",
+    maxVolunteers: 64,
+    unit: "专业+院校",
+    inner: "1个专业+1所院校为1个志愿",
+    adjustment: "不设专业调剂",
+    strategy: "按文化成绩、专业成绩、院校层次和专业方向逐个排序。",
+    note: "体育类按对应批次和投档规则填报，需核对当年官方公告。",
+    source: "以河南省教育考试院最终公告为准。"
+  },
+  "体育高职（专科）批": {
+    category: "体育类",
+    maxVolunteers: 64,
+    unit: "专业+院校",
+    inner: "1个专业+1所院校为1个志愿",
+    adjustment: "不设专业调剂",
+    strategy: "按文化成绩、专业成绩、院校位置和专业方向逐个排序。",
+    note: "体育类按对应批次和投档规则填报，需核对当年官方公告。",
+    source: "以河南省教育考试院最终公告为准。"
+  }
+};
+
+const batchAliases = {
+  "本科批": "普通本科批",
+  "提前批": "普通本科提前批",
+  "专科批": "普通高职（专科）批"
+};
+
 const programs = [
   {
     "id": "zzdx-cs",
@@ -2377,13 +2476,13 @@ const pricing = [
     "name": "基础版",
     "price": "¥29",
     "period": "本届高考季",
-    "desc": "适合先把能报学校看完整",
+    "desc": "适合先把当前批次能报候选看完整",
     "perks": [
-      "完整冲稳保名单",
+      "按当前批次规则整理候选清单",
       "选科可报检查",
       "基础风险等级",
       "就业方向和学习难度摘要",
-      "收藏并加入志愿表",
+      "收藏并加入候选志愿表",
       "院校专业组基础详情"
     ],
     "button": "开通基础版",
@@ -2393,7 +2492,7 @@ const pricing = [
     "name": "进阶版",
     "price": "¥59",
     "period": "本届高考季",
-    "desc": "适合认真做一份可讨论、可打印、可复盘的家庭志愿方案",
+    "desc": "适合认真做一份可讨论、可打印、可复盘的家庭候选方案",
     "perks": [
       "基础版全部权益",
       "推荐理由和排序说明",
@@ -2401,7 +2500,7 @@ const pricing = [
       "专业组深度风险",
       "考研升学、适合人群和大学四年学习建议",
       "转专业可行性与校内提升路径",
-      "家长版解释报告",
+      "家长版批次规则解释报告",
       "导出/打印与多次模拟"
     ],
     "button": "开通进阶版"
