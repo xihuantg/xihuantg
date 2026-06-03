@@ -46,10 +46,14 @@ function difficultyClass(level = "") {
   return "medium";
 }
 
+function learningDifficultyLabel(level) {
+  return `学习难度：${level || "待补充"}`;
+}
+
 function programDeepSummary(item) {
   return `
     <div class="deep-summary">
-      <span class="difficulty-pill ${difficultyClass(item.difficulty)}">${item.difficulty || "难度待补充"}</span>
+      <span class="difficulty-pill ${difficultyClass(item.difficulty)}">${learningDifficultyLabel(item.difficulty)}</span>
       <span>${item.employmentOutlook || "就业方向待补充"}</span>
     </div>
   `;
@@ -556,7 +560,7 @@ function renderMajorCard(major, ok) {
       <p><strong>常见要求：</strong>${major.primary} + ${major.secondary.join("+")}</p>
       <p><strong>代表专业：</strong>${major.examples.join("、")}</p>
       <div class="major-deep-grid">
-        <span class="difficulty-pill ${difficultyClass(major.difficulty)}">${major.difficulty}</span>
+        <span class="difficulty-pill ${difficultyClass(major.difficulty)}">${learningDifficultyLabel(major.difficulty)}</span>
         <span>${major.employment}</span>
       </div>
       <p><strong>适合谁：</strong>${major.fitFor}</p>
