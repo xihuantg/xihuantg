@@ -505,6 +505,8 @@ function renderSchoolMobileCard(item, stillEligible) {
         <span class="status-tag ${stillEligible ? "yes" : "no"}">${stillEligible ? "可报" : "不可报"}</span>
       </div>
       <div class="school-mobile-ranks">
+        <div><span>录取概率</span><strong>${item.chance}%</strong></div>
+        <div><span>学校代码</span><strong>${item.schoolCode || "待补充"}</strong></div>
         <div><span>近三年分数</span><strong>${item.scores.join(" / ")}</strong></div>
         <div><span>近三年位次</span><strong>${item.ranks.join(" / ")}</strong></div>
         <div><span>计划变化</span><strong>${item.plan}人 ${item.planChange}</strong></div>

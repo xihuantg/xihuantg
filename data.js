@@ -11,6 +11,7 @@ const programs = [
     "level": "211",
     "batch": "本科批",
     "website": "https://www.zzu.edu.cn/",
+    "schoolCode": "10459",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -59,6 +60,7 @@ const programs = [
     "level": "211",
     "batch": "本科批",
     "website": "https://www.zzu.edu.cn/",
+    "schoolCode": "10459",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -108,6 +110,7 @@ const programs = [
     "level": "双一流",
     "batch": "本科批",
     "website": "https://www.henu.edu.cn/",
+    "schoolCode": "10475",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -156,6 +159,7 @@ const programs = [
     "level": "双一流",
     "batch": "本科批",
     "website": "https://www.henu.edu.cn/",
+    "schoolCode": "10475",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -204,6 +208,7 @@ const programs = [
     "level": "省重点",
     "batch": "本科批",
     "website": "https://www.htu.edu.cn/",
+    "schoolCode": "10476",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -252,6 +257,7 @@ const programs = [
     "level": "省重点",
     "batch": "本科批",
     "website": "https://www.htu.edu.cn/",
+    "schoolCode": "10476",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -301,6 +307,7 @@ const programs = [
     "level": "省重点",
     "batch": "本科批",
     "website": "https://www.haut.edu.cn/",
+    "schoolCode": "10463",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -349,6 +356,7 @@ const programs = [
     "level": "省重点",
     "batch": "本科批",
     "website": "https://www.huel.edu.cn/",
+    "schoolCode": "10484",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -397,6 +405,7 @@ const programs = [
     "level": "普通本科",
     "batch": "本科批",
     "website": "https://www.lit.edu.cn/",
+    "schoolCode": "11070",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -445,6 +454,7 @@ const programs = [
     "level": "211",
     "batch": "本科批",
     "website": "https://www.bjut.edu.cn/",
+    "schoolCode": "10005",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -493,6 +503,7 @@ const programs = [
     "level": "211",
     "batch": "本科批",
     "website": "https://www.shu.edu.cn/",
+    "schoolCode": "10280",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
@@ -541,6 +552,7 @@ const programs = [
     "level": "985",
     "batch": "本科批",
     "website": "https://www.scu.edu.cn/",
+    "schoolCode": "10610",
     "photos": [
       "outputs/campus-placeholder-1.jpg",
       "outputs/campus-placeholder-2.jpg",
