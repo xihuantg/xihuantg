@@ -4,6 +4,12 @@
 
 项目是一个静态前端演示站点，入口文件为 `index.html`，核心交互在 `app.js`，样式在 `styles.css`，演示数据在 `data.js`。`v1/` 目录保留早期版本快照。
 
+线上网站：
+
+- 新版：https://xihuantg.github.io/xihuantg/?v=12
+- 旧版快照：https://xihuantg.github.io/xihuantg/v1/?v=1
+- GitHub 仓库：https://github.com/xihuantg/xihuantg
+
 最近一轮主要完成了 PC 端视觉与信息架构重构：
 
 - PC 端从深色长页面改为浅暖色、顶部导航、分板块展示。
