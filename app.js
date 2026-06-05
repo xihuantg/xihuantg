@@ -5,6 +5,7 @@ let state = {
   activeFilter: "all",
   schoolRiskFilter: "all",
   schoolMode: "school",
+  desktopTab: "home",
   mobileTab: "home",
   detailReturnTab: "recommend",
   activeDetailId: null,
@@ -794,7 +795,11 @@ function openMajorDirectory() {
 
 function closeMajorDirectory() {
   document.body.classList.remove("directory-mode");
-  window.location.hash = "majors";
+  if (isMobileDevice()) {
+    window.location.hash = "majors";
+  } else {
+    openDesktopTab("schools");
+  }
 }
 
 function detectMobileDevice() {
@@ -831,6 +836,34 @@ function syncDeviceMode() {
   }
 }
 
+function normalizeDesktopTab(pageId) {
+  if (pageId === "profile") return "profile";
+  if (pageId === "volunteer") return "diagnosis";
+  if (["schools", "majors", "environment"].includes(pageId)) return "schools";
+  if (["pricing", "report", "why-pay", "data"].includes(pageId)) return "account";
+  if (pageId === "recommend") return "recommend";
+  if (pageId === "diagnosis") return "diagnosis";
+  if (pageId === "account") return "account";
+  return "home";
+}
+
+function openDesktopTab(tabId = "home", shouldScroll = true) {
+  const normalized = normalizeDesktopTab(tabId);
+  state.desktopTab = normalized;
+  document.body.dataset.desktopTab = normalized;
+  document.body.classList.remove("mobile-tab-active", "mobile-page-active", "school-detail-active");
+  document.body.removeAttribute("data-mobile-tab");
+  document.querySelectorAll(".nav a, .brand").forEach((link) => {
+    const hash = link.getAttribute("href") || "#home";
+    const target = normalizeDesktopTab(hash.replace("#", ""));
+    link.classList.toggle("active", target === normalized || (normalized === "profile" && target === "account"));
+  });
+  if (window.location.hash.replace("#", "") !== normalized) {
+    window.history.replaceState(null, "", `#${normalized}`);
+  }
+  if (shouldScroll) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function normalizeMobileTab(pageId) {
   if (pageId === "volunteer") return "diagnosis";
   if (["schools", "majors", "environment"].includes(pageId)) return "schools";
@@ -841,11 +874,7 @@ function normalizeMobileTab(pageId) {
 
 function openMobileTab(tabId, shouldScroll = true) {
   if (!isMobileDevice()) {
-    if (tabId === "home") {
-      window.location.hash = "home";
-    } else {
-      window.location.hash = tabId;
-    }
+    openDesktopTab(tabId, shouldScroll);
     return;
   }
   state.mobileTab = tabId;
@@ -947,7 +976,11 @@ function openSchoolDetail(id, returnTab = state.mobileTab || "recommend") {
 
 function closeSchoolDetail() {
   document.body.classList.remove("school-detail-active");
-  openMobileTab(state.detailReturnTab || "recommend", true);
+  if (isMobileDevice()) {
+    openMobileTab(state.detailReturnTab || "recommend", true);
+  } else {
+    openDesktopTab(state.detailReturnTab || "recommend", true);
+  }
 }
 
 function renderPricing() {
@@ -978,6 +1011,36 @@ function renderReport() {
     <div class="safe"><strong>保底</strong><p>${counts["保"] || 0} 个志愿</p></div>
   `;
   renderReportAssessment();
+}
+
+function renderProfile() {
+  const profile = getProfile();
+  const eligible = state.recommendations.filter((item) => item.eligible);
+  const subjectLine = `${profile.primary} + ${profile.secondary.join(" + ")}`;
+  const memberLabel = state.member ? "高级会员" : "免费预览";
+  const reportLabel = state.member ? "完整报告已解锁" : "基础档案";
+  const setText = (selector, value) => {
+    const node = $(selector);
+    if (node) node.textContent = value;
+  };
+  const entryTitle = $("#profileEntryTitle");
+  const entryMeta = $("#profileEntryMeta");
+  const accountStatus = $("#accountMemberStatus");
+  if (entryTitle) entryTitle.textContent = `${profile.province} · ${subjectLine}`;
+  if (entryMeta) entryMeta.textContent = `${profile.score}分 · ${profile.rank}位 · ${profile.batch}`;
+  if (accountStatus) accountStatus.textContent = memberLabel;
+  setText("#profileMemberBadge", memberLabel);
+  setText("#profileNameLine", `${profile.province}考生档案`);
+  setText("#profileProvinceValue", profile.province);
+  setText("#profileSubjectLine", subjectLine);
+  setText("#profileScoreValue", profile.score);
+  setText("#profileRankValue", formatRank(profile.rank));
+  setText("#profileBatchValue", profile.batch);
+  setText("#profileEligibleValue", eligible.length);
+  setText("#profileMajorValue", profile.majorPreference);
+  setText("#profileCityValue", profile.cityPreference);
+  setText("#profileVolunteerValue", `${state.volunteers.length} 个`);
+  setText("#profileReportValue", reportLabel);
 }
 
 function updateProfileSummary() {
@@ -1080,6 +1143,7 @@ function refreshAll() {
   renderSchools();
   renderMajors();
   renderVolunteers();
+  renderProfile();
   renderMobileHomeSummary();
   renderBatchRulePanels();
   if (state.assessment.result) state.assessment.result = calculateAssessment();
@@ -1129,7 +1193,7 @@ function initEvents() {
 
   document.addEventListener("click", (event) => {
     const target = event.target instanceof HTMLElement
-      ? event.target.closest("[data-detail], [data-school-detail], [data-add], [data-school-add], [data-fav], [data-school-risk], [data-school-mode], [data-assessment-question], [data-up], [data-down], [data-remove], [data-plan], [data-mobile-open], [data-mobile-directory]")
+      ? event.target.closest("[data-detail], [data-school-detail], [data-add], [data-school-add], [data-fav], [data-school-risk], [data-school-mode], [data-assessment-question], [data-up], [data-down], [data-remove], [data-plan], [data-mobile-open], [data-mobile-directory], [data-desktop-open]")
       : null;
     if (!(target instanceof HTMLElement)) return;
     if (target.dataset.detail) openSchoolDetail(target.dataset.detail, "recommend");
@@ -1157,7 +1221,15 @@ function initEvents() {
       updateProfileSummary();
       renderRecommendations();
       renderReport();
+      renderProfile();
       showToast(`已模拟查看${target.dataset.plan}进阶分析`);
+    }
+    if (target.dataset.desktopOpen) {
+      if (isMobileDevice()) {
+        openMobileTab(normalizeMobileTab(target.dataset.desktopOpen));
+      } else {
+        openDesktopTab(target.dataset.desktopOpen);
+      }
     }
   });
 
@@ -1166,6 +1238,7 @@ function initEvents() {
     updateProfileSummary();
     renderRecommendations();
     renderReport();
+    renderProfile();
     showToast("已模拟开启进阶分析");
   });
   $("#loginBtn").addEventListener("click", () => showToast("登录可接入手机号验证码和版本订单"));
@@ -1175,6 +1248,7 @@ function initEvents() {
     updateProfileSummary();
     renderRecommendations();
     renderReport();
+    renderProfile();
     renderMobileHomeSummary();
     showToast("已模拟开启进阶分析");
   });
@@ -1236,13 +1310,26 @@ function initEvents() {
     button.addEventListener("click", openMajorDirectory);
   });
   document.querySelectorAll(".nav a, .brand").forEach((link) => {
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (event) => {
       document.body.classList.remove("directory-mode");
-      if (isMobileDevice()) closeMobilePage();
+      if (isMobileDevice()) {
+        closeMobilePage();
+        return;
+      }
+      event.preventDefault();
+      const hash = link.getAttribute("href") || "#home";
+      openDesktopTab(hash.replace("#", ""));
     });
   });
 
-  window.addEventListener("resize", syncDeviceMode);
+  window.addEventListener("resize", () => {
+    syncDeviceMode();
+    if (isMobileDevice()) {
+      openMobileTab(state.mobileTab || "home", false);
+    } else {
+      openDesktopTab(state.desktopTab || normalizeDesktopTab(window.location.hash.replace("#", "")), false);
+    }
+  });
   window.addEventListener("orientationchange", () => window.setTimeout(syncDeviceMode, 120));
 }
 
@@ -1256,7 +1343,7 @@ function init() {
   renderAssessmentResult();
   refreshAll();
   initEvents();
-  openMobileTab("home", false);
+  openMobileTab(isMobileDevice() ? normalizeMobileTab(window.location.hash.replace("#", "")) : normalizeDesktopTab(window.location.hash.replace("#", "")), false);
 }
 
 init();

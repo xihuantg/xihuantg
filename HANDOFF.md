@@ -6,7 +6,7 @@
 
 网站链接：
 
-- 新版线上预览：https://xihuantg.github.io/xihuantg/?v=13#home
+- 新版线上预览：https://xihuantg.github.io/xihuantg/?v=14#home
 - 旧版快照：https://xihuantg.github.io/xihuantg/v1/?v=1
 - GitHub 仓库：https://github.com/xihuantg/xihuantg
 

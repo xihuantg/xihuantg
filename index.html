@@ -579,19 +579,32 @@
       <section class="section-card" id="pricing" data-mobile-page="pricing" data-mobile-tab="account">
         <div class="section-head">
           <div>
-            <div class="section-kicker">基础版/进阶版权益</div>
-            <h2>少一次盲填，多一份依据</h2>
-            <p class="muted">把录取机会参考、冲稳保梯度和专业组风险整理成能讨论的候选清单，适合想低成本认真做志愿的家庭。</p>
+            <div class="section-kicker">会员中心</div>
+            <h2>开通完整志愿方案</h2>
+            <p class="muted">解锁完整可报范围、排序依据、专业组风险、导出报告和家庭讨论版。</p>
           </div>
         </div>
         <div class="pricing-grid" id="pricingGrid"></div>
+        <div class="account-dashboard">
+          <button class="profile-entry-card" type="button" data-desktop-open="profile">
+            <span class="mini-label">个人信息</span>
+            <strong id="profileEntryTitle">河南 · 物理 + 化学 + 生物</strong>
+            <small id="profileEntryMeta">612分 · 28500位 · 本科批</small>
+            <em>查看档案</em>
+          </button>
+          <div class="account-status-card">
+            <span class="mini-label">当前状态</span>
+            <strong id="accountMemberStatus">免费预览</strong>
+            <small>开通后可查看完整名单、排序说明和报告导出。</small>
+          </div>
+        </div>
       </section>
 
-      <section class="section-card" data-mobile-tab="account">
+      <section class="section-card" id="membershipBenefits" data-mobile-tab="account">
         <div class="section-head">
           <div>
             <div class="section-kicker">权益对比</div>
-            <h2>付费后多看到什么</h2>
+            <h2>开通后可用能力</h2>
           </div>
         </div>
         <div class="unlock-table">
@@ -643,6 +656,99 @@
           <div><strong>2025+</strong><span>河南新高考口径</span></div>
           <div><strong>3年</strong><span>位次趋势样例</span></div>
           <div><strong>官方为准</strong><span>考试院/高校信息</span></div>
+        </div>
+      </section>
+
+      <section class="section-card profile-panel" id="profile" data-desktop-page="profile">
+        <div class="profile-workbench">
+          <aside class="profile-sidebar">
+            <div class="profile-score-card">
+              <h3>我的成绩</h3>
+              <dl>
+                <div><dt>省份</dt><dd id="profileProvinceValue">河南</dd></div>
+                <div><dt>科目</dt><dd id="profileSubjectLine">物理 + 化学 + 生物</dd></div>
+                <div><dt>分数</dt><dd id="profileScoreValue">612</dd></div>
+                <div><dt>位次</dt><dd id="profileRankValue">28500</dd></div>
+              </dl>
+              <button class="secondary-btn" type="button" data-desktop-open="home">修改成绩</button>
+              <button class="primary-btn" type="button" data-desktop-open="recommend">智能填报</button>
+              <button class="primary-btn soft" type="button" data-desktop-open="schools">同分去向</button>
+            </div>
+
+            <nav class="profile-side-menu" aria-label="个人中心菜单">
+              <button type="button" data-desktop-open="profile">我的成绩</button>
+              <button type="button" data-desktop-open="diagnosis">我的志愿表</button>
+              <button type="button" data-desktop-open="diagnosis">我的备选</button>
+              <button type="button" data-desktop-open="schools">收藏院校</button>
+              <button type="button" data-desktop-open="schools">收藏专业</button>
+              <strong>专业测评</strong>
+              <button class="active" type="button" data-desktop-open="profile">专业定位测评</button>
+              <button type="button" data-desktop-open="profile">性格测评</button>
+              <button type="button" data-desktop-open="profile">兴趣专业测评</button>
+              <button type="button" data-desktop-open="account">会员权益</button>
+              <button type="button" data-desktop-open="home">常见问题</button>
+            </nav>
+          </aside>
+
+          <section class="profile-content">
+            <div class="profile-content-head">
+              <div>
+                <div class="section-kicker">测评中心</div>
+                <h2>专业定位测评</h2>
+              </div>
+              <div class="profile-account-card">
+                <div class="profile-avatar">豫</div>
+                <div>
+                  <strong id="profileNameLine">河南考生档案</strong>
+                  <span id="profileMemberBadge">免费预览</span>
+                </div>
+                <button type="button" data-desktop-open="account">开通会员</button>
+              </div>
+            </div>
+
+            <div class="profile-advisory">
+              根据选科、分数、位次和专业偏好，系统会优先完成可报范围、专业方向和风险梯度判断。
+            </div>
+
+            <div class="profile-test-actions">
+              <button class="interest-card" type="button">
+                <span>测测你的兴趣</span>
+                <strong id="profileMajorValue">计算机、软件与人工智能</strong>
+                <small>结合专业偏好，定位适合长期投入的方向</small>
+              </button>
+              <button class="personality-card" type="button">
+                <span>测测你的性格</span>
+                <strong>MBTI 参考</strong>
+                <small>辅助判断学习方式和专业适配度</small>
+              </button>
+            </div>
+
+            <div class="profile-report-board">
+              <div class="profile-report-row">
+                <div>
+                  <span>当前批次</span>
+                  <strong id="profileBatchValue">本科批</strong>
+                </div>
+                <div>
+                  <span>可报专业组</span>
+                  <strong id="profileEligibleValue">0</strong>
+                </div>
+                <div>
+                  <span>已加入志愿</span>
+                  <strong id="profileVolunteerValue">0 个</strong>
+                </div>
+                <div>
+                  <span>报告状态</span>
+                  <strong id="profileReportValue">基础档案</strong>
+                </div>
+              </div>
+              <div class="profile-empty-state">
+                <div class="empty-cube">◇</div>
+                <p>完成测评后查看适合自己的专业方向和院校组合。</p>
+                <button class="secondary-btn" type="button" data-desktop-open="recommend">查看推荐结果</button>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
     </main>
