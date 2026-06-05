@@ -4,9 +4,9 @@
 
 项目是一个静态前端演示站点，入口文件为 `index.html`，核心交互在 `app.js`，样式在 `styles.css`，演示数据在 `data.js`。`v1/` 目录保留早期版本快照。
 
-线上网站：
+网站链接：
 
-- 新版本地预览：file:///C:/Users/User/.codex/worktrees/dff6/New%20project/index.html#home
+- 新版线上预览：https://xihuantg.github.io/xihuantg/?v=13#home
 - 旧版快照：https://xihuantg.github.io/xihuantg/v1/?v=1
 - GitHub 仓库：https://github.com/xihuantg/xihuantg
 
