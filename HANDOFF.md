@@ -6,7 +6,7 @@
 
 线上网站：
 
-- 新版：https://xihuantg.github.io/xihuantg/?v=12
+- 新版本地预览：file:///C:/Users/User/.codex/worktrees/dff6/New%20project/index.html#home
 - 旧版快照：https://xihuantg.github.io/xihuantg/v1/?v=1
 - GitHub 仓库：https://github.com/xihuantg/xihuantg
 
